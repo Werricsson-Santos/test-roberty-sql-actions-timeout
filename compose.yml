@@ -1,0 +1,72 @@
+# Local SQL databases for the database actions' integration tests (timeouts, cancelation).
+# Disposable containers with test-only credentials — never point them at real data.
+# Usage and test commands: docker/databases/README.md
+name: roberty-actions-databases
+
+services:
+  mysql:
+    image: mysql:8.0
+    # The `mysql` (mysqljs) driver used by the actions cannot log in with caching_sha2_password, MySQL 8's default
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: ${ROBERTY_TEST_DB_PASSWORD:-Roberty_Test_123}
+      MYSQL_DATABASE: roberty_test
+    ports:
+      - "${ROBERTY_TEST_MYSQL_PORT:-13306}:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-p${ROBERTY_TEST_DB_PASSWORD:-Roberty_Test_123}"]
+      interval: 5s
+      retries: 30
+
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_PASSWORD: ${ROBERTY_TEST_DB_PASSWORD:-Roberty_Test_123}
+      POSTGRES_DB: roberty_test
+    ports:
+      - "${ROBERTY_TEST_POSTGRES_PORT:-15432}:5432"
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres", "-d", "roberty_test"]
+      interval: 5s
+      retries: 30
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: Developer
+      MSSQL_SA_PASSWORD: ${ROBERTY_TEST_DB_PASSWORD:-Roberty_Test_123}
+    ports:
+      - "${ROBERTY_TEST_SQLSERVER_PORT:-11433}:1433"
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P \"$$MSSQL_SA_PASSWORD\" -Q 'SELECT 1' || exit 1"]
+      interval: 10s
+      retries: 30
+
+  oracle:
+    image: gvenzl/oracle-free:23-slim-faststart
+    environment:
+      ORACLE_PASSWORD: ${ROBERTY_TEST_DB_PASSWORD:-Roberty_Test_123}
+      APP_USER: roberty_test
+      APP_USER_PASSWORD: ${ROBERTY_TEST_DB_PASSWORD:-Roberty_Test_123}
+    ports:
+      - "${ROBERTY_TEST_ORACLE_PORT:-11521}:1521"
+    healthcheck:
+      test: ["CMD", "healthcheck.sh"]
+      interval: 10s
+      retries: 60
+
+  firebird:
+    image: firebirdsql/firebird:5
+    environment:
+      FIREBIRD_ROOT_PASSWORD: ${ROBERTY_TEST_DB_PASSWORD:-Roberty_Test_123}
+      FIREBIRD_USER: roberty_test
+      FIREBIRD_PASSWORD: ${ROBERTY_TEST_DB_PASSWORD:-Roberty_Test_123}
+      FIREBIRD_DATABASE: roberty_test.fdb
+      # node-firebird logs in with Legacy_Auth and without required wire encryption; Firebird 3+
+      # disables both by default. The user manager comes first so FIREBIRD_USER is created there.
+      FIREBIRD_CONF_WireCrypt: Enabled
+      FIREBIRD_CONF_AuthServer: Legacy_Auth;Srp256;Srp
+      FIREBIRD_CONF_UserManager: Legacy_UserManager;Srp
+    ports:
+      - "${ROBERTY_TEST_FIREBIRD_PORT:-13050}:3050"

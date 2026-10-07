@@ -1,0 +1,4769 @@
+[
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "inicio",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "inicio",
+      "alias": "inicio",
+      "stopRobotIfError": false,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "return \"Teste de tempo limite SQL: procure ❌ no histórico. Bancos de docker/databases (roberty-actions).\""
+      }
+    },
+    "next": "mySecao",
+    "prev": "entrypoint"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "myConectarInicio",
+    "type": "UTILS_CUSTOM_CODE",
+    "settings": {
+      "id": "myConectarInicio",
+      "alias": "myConectarInicio",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": "return Date.now()",
+      "varsToGenerate": [
+        "value"
+      ]
+    },
+    "parent": "myConectarTeste",
+    "next": "myConexao"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "myConexao",
+    "type": "DATABASE_MYSQL_CONNECTION",
+    "settings": {
+      "id": "myConexao",
+      "alias": "myConexao",
+      "version": "v2_0_0",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "connectionString": {
+        "type": "text",
+        "value": "mysql://root:Roberty_Test_123@localhost:13306/roberty_test"
+      },
+      "connectTimeout": 10,
+      "queryTimeout": 3,
+      "varsToGenerate": []
+    },
+    "parent": "myConectarTeste",
+    "prev": "myConectarInicio",
+    "next": "myConectarOk"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "myConectarOk",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "myConectarOk",
+      "alias": "myConectarOk",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "return `✅ [MySQL] conectou (padrão das consultas: 3s) em ${((Date.now() - actions.myConectarInicio.value) / 1000).toFixed(1)}s`"
+      }
+    },
+    "parent": "myConectarTeste",
+    "prev": "myConexao"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "myConectarErro",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "myConectarErro",
+      "alias": "myConectarErro",
+      "stopRobotIfError": false,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "return `❌ [MySQL] conectou (padrão das consultas: 3s): ${actions.myConectarTeste.message}`"
+      }
+    },
+    "parent": "myConectarTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "myConectarTeste",
+    "type": "Designer:tryCatch",
+    "minimized": false,
+    "settings": {
+      "id": "myConectarTeste",
+      "alias": "myConectarTeste",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "attempts": 1
+    },
+    "tryEntrypoint": "myConectarInicio",
+    "catchEntrypoint": "myConectarErro",
+    "parent": "mySecao",
+    "next": "myRapidaTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "myRapidaInicio",
+    "type": "UTILS_CUSTOM_CODE",
+    "settings": {
+      "id": "myRapidaInicio",
+      "alias": "myRapidaInicio",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": "return Date.now()",
+      "varsToGenerate": [
+        "value"
+      ]
+    },
+    "parent": "myRapidaTeste",
+    "next": "myRapidaQuery"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "myRapidaQuery",
+    "type": "DATABASE_MYSQL_QUERY",
+    "settings": {
+      "id": "myRapidaQuery",
+      "alias": "myRapidaQuery",
+      "version": "v2_0_0",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "connection": "myConexao",
+      "query": {
+        "type": "longText",
+        "value": "SELECT 1 AS ok"
+      }
+    },
+    "parent": "myRapidaTeste",
+    "prev": "myRapidaInicio",
+    "next": "myRapidaOk"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "myRapidaOk",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "myRapidaOk",
+      "alias": "myRapidaOk",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "return `✅ [MySQL] consulta rápida herdando o padrão da conexão em ${((Date.now() - actions.myRapidaInicio.value) / 1000).toFixed(1)}s`"
+      }
+    },
+    "parent": "myRapidaTeste",
+    "prev": "myRapidaQuery"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "myRapidaErro",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "myRapidaErro",
+      "alias": "myRapidaErro",
+      "stopRobotIfError": false,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "return `❌ [MySQL] consulta rápida herdando o padrão da conexão: ${actions.myRapidaTeste.message}`"
+      }
+    },
+    "parent": "myRapidaTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "myRapidaTeste",
+    "type": "Designer:tryCatch",
+    "minimized": false,
+    "settings": {
+      "id": "myRapidaTeste",
+      "alias": "myRapidaTeste",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "attempts": 1
+    },
+    "tryEntrypoint": "myRapidaInicio",
+    "catchEntrypoint": "myRapidaErro",
+    "parent": "mySecao",
+    "prev": "myConectarTeste",
+    "next": "myMaiorTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "myMaiorInicio",
+    "type": "UTILS_CUSTOM_CODE",
+    "settings": {
+      "id": "myMaiorInicio",
+      "alias": "myMaiorInicio",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": "return Date.now()",
+      "varsToGenerate": [
+        "value"
+      ]
+    },
+    "parent": "myMaiorTeste",
+    "next": "myMaiorQuery"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "myMaiorQuery",
+    "type": "DATABASE_MYSQL_QUERY",
+    "settings": {
+      "id": "myMaiorQuery",
+      "alias": "myMaiorQuery",
+      "version": "v2_0_0",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "connection": "myConexao",
+      "query": {
+        "type": "longText",
+        "value": "SELECT SLEEP(6) AS dormiu"
+      },
+      "timeout": 15
+    },
+    "parent": "myMaiorTeste",
+    "prev": "myMaiorInicio",
+    "next": "myMaiorOk"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "myMaiorOk",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "myMaiorOk",
+      "alias": "myMaiorOk",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "return `✅ [MySQL] consulta de 6s com limite próprio de 15s (maior que o padrão) em ${((Date.now() - actions.myMaiorInicio.value) / 1000).toFixed(1)}s`"
+      }
+    },
+    "parent": "myMaiorTeste",
+    "prev": "myMaiorQuery"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "myMaiorErro",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "myMaiorErro",
+      "alias": "myMaiorErro",
+      "stopRobotIfError": false,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "return `❌ [MySQL] consulta de 6s com limite próprio de 15s (maior que o padrão): ${actions.myMaiorTeste.message}`"
+      }
+    },
+    "parent": "myMaiorTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "myMaiorTeste",
+    "type": "Designer:tryCatch",
+    "minimized": false,
+    "settings": {
+      "id": "myMaiorTeste",
+      "alias": "myMaiorTeste",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "attempts": 1
+    },
+    "tryEntrypoint": "myMaiorInicio",
+    "catchEntrypoint": "myMaiorErro",
+    "parent": "mySecao",
+    "prev": "myRapidaTeste",
+    "next": "myZeroTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "myZeroInicio",
+    "type": "UTILS_CUSTOM_CODE",
+    "settings": {
+      "id": "myZeroInicio",
+      "alias": "myZeroInicio",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": "return Date.now()",
+      "varsToGenerate": [
+        "value"
+      ]
+    },
+    "parent": "myZeroTeste",
+    "next": "myZeroQuery"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "myZeroQuery",
+    "type": "DATABASE_MYSQL_QUERY",
+    "settings": {
+      "id": "myZeroQuery",
+      "alias": "myZeroQuery",
+      "version": "v2_0_0",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "connection": "myConexao",
+      "query": {
+        "type": "longText",
+        "value": "SELECT SLEEP(6) AS dormiu"
+      },
+      "timeout": 0
+    },
+    "parent": "myZeroTeste",
+    "prev": "myZeroInicio",
+    "next": "myZeroOk"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "myZeroOk",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "myZeroOk",
+      "alias": "myZeroOk",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "return `✅ [MySQL] consulta de 6s com limite 0 (sem limite) em ${((Date.now() - actions.myZeroInicio.value) / 1000).toFixed(1)}s`"
+      }
+    },
+    "parent": "myZeroTeste",
+    "prev": "myZeroQuery"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "myZeroErro",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "myZeroErro",
+      "alias": "myZeroErro",
+      "stopRobotIfError": false,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "return `❌ [MySQL] consulta de 6s com limite 0 (sem limite): ${actions.myZeroTeste.message}`"
+      }
+    },
+    "parent": "myZeroTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "myZeroTeste",
+    "type": "Designer:tryCatch",
+    "minimized": false,
+    "settings": {
+      "id": "myZeroTeste",
+      "alias": "myZeroTeste",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "attempts": 1
+    },
+    "tryEntrypoint": "myZeroInicio",
+    "catchEntrypoint": "myZeroErro",
+    "parent": "mySecao",
+    "prev": "myMaiorTeste",
+    "next": "myPadraoTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "myPadraoInicio",
+    "type": "UTILS_CUSTOM_CODE",
+    "settings": {
+      "id": "myPadraoInicio",
+      "alias": "myPadraoInicio",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": "return Date.now()",
+      "varsToGenerate": [
+        "value"
+      ]
+    },
+    "parent": "myPadraoTeste",
+    "next": "myPadraoQuery"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "myPadraoQuery",
+    "type": "DATABASE_MYSQL_QUERY",
+    "settings": {
+      "id": "myPadraoQuery",
+      "alias": "myPadraoQuery",
+      "version": "v2_0_0",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "connection": "myConexao",
+      "query": {
+        "type": "longText",
+        "value": "SELECT SLEEP(6) AS dormiu"
+      }
+    },
+    "parent": "myPadraoTeste",
+    "prev": "myPadraoInicio",
+    "next": "myPadraoNaoEstourou"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "myPadraoNaoEstourou",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "myPadraoNaoEstourou",
+      "alias": "myPadraoNaoEstourou",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "return `❌ [MySQL] consulta de 6s parou no padrão da conexão (3s): não estourou (${((Date.now() - actions.myPadraoInicio.value) / 1000).toFixed(1)}s)`"
+      }
+    },
+    "parent": "myPadraoTeste",
+    "prev": "myPadraoQuery"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "myPadraoVeredito",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "myPadraoVeredito",
+      "alias": "myPadraoVeredito",
+      "stopRobotIfError": false,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "const segundos = Number(((Date.now() - actions.myPadraoInicio.value) / 1000).toFixed(1))\nconst mensagem = String(actions.myPadraoTeste.message)\nconst noTempo = segundos < 3 + 2\nconst ehTimeout = mensagem.includes(\"exceeded the time limit\")\nreturn (ehTimeout && noTempo ? `✅ [MySQL] consulta de 6s parou no padrão da conexão (3s) em ${segundos}s` : `❌ [MySQL] consulta de 6s parou no padrão da conexão (3s): ${segundos}s, \"${mensagem}\"`)"
+      }
+    },
+    "parent": "myPadraoTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "myPadraoTeste",
+    "type": "Designer:tryCatch",
+    "minimized": false,
+    "settings": {
+      "id": "myPadraoTeste",
+      "alias": "myPadraoTeste",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "attempts": 1
+    },
+    "tryEntrypoint": "myPadraoInicio",
+    "catchEntrypoint": "myPadraoVeredito",
+    "parent": "mySecao",
+    "prev": "myZeroTeste",
+    "next": "myDepoisTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "myDepoisInicio",
+    "type": "UTILS_CUSTOM_CODE",
+    "settings": {
+      "id": "myDepoisInicio",
+      "alias": "myDepoisInicio",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": "return Date.now()",
+      "varsToGenerate": [
+        "value"
+      ]
+    },
+    "parent": "myDepoisTeste",
+    "next": "myDepoisQuery"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "myDepoisQuery",
+    "type": "DATABASE_MYSQL_QUERY",
+    "settings": {
+      "id": "myDepoisQuery",
+      "alias": "myDepoisQuery",
+      "version": "v2_0_0",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "connection": "myConexao",
+      "query": {
+        "type": "longText",
+        "value": "SELECT 1 AS ok"
+      },
+      "timeout": 10
+    },
+    "parent": "myDepoisTeste",
+    "prev": "myDepoisInicio",
+    "next": "myDepoisOk"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "myDepoisOk",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "myDepoisOk",
+      "alias": "myDepoisOk",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "return `✅ [MySQL] conexão continua utilizável depois do timeout em ${((Date.now() - actions.myDepoisInicio.value) / 1000).toFixed(1)}s`"
+      }
+    },
+    "parent": "myDepoisTeste",
+    "prev": "myDepoisQuery"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "myDepoisErro",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "myDepoisErro",
+      "alias": "myDepoisErro",
+      "stopRobotIfError": false,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "return `❌ [MySQL] conexão continua utilizável depois do timeout: ${actions.myDepoisTeste.message}`"
+      }
+    },
+    "parent": "myDepoisTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "myDepoisTeste",
+    "type": "Designer:tryCatch",
+    "minimized": false,
+    "settings": {
+      "id": "myDepoisTeste",
+      "alias": "myDepoisTeste",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "attempts": 1
+    },
+    "tryEntrypoint": "myDepoisInicio",
+    "catchEntrypoint": "myDepoisErro",
+    "parent": "mySecao",
+    "prev": "myPadraoTeste",
+    "next": "myMenorTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "myFechar2",
+    "type": "DATABASE_MYSQL_CLOSE",
+    "settings": {
+      "id": "myFechar2",
+      "alias": "myFechar2",
+      "version": "v1_0_0",
+      "stopRobotIfError": false,
+      "numberOfAttempts": 1,
+      "connection": "myConexao2"
+    },
+    "parent": "myMenorTeste",
+    "prev": "myMenorVeredito"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "myMenorInicio",
+    "type": "UTILS_CUSTOM_CODE",
+    "settings": {
+      "id": "myMenorInicio",
+      "alias": "myMenorInicio",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": "return Date.now()",
+      "varsToGenerate": [
+        "value"
+      ]
+    },
+    "parent": "myMenorTeste",
+    "next": "myConexao2"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "myConexao2",
+    "type": "DATABASE_MYSQL_CONNECTION",
+    "settings": {
+      "id": "myConexao2",
+      "alias": "myConexao2",
+      "version": "v2_0_0",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "connectionString": {
+        "type": "text",
+        "value": "mysql://root:Roberty_Test_123@localhost:13306/roberty_test"
+      },
+      "connectTimeout": 10,
+      "queryTimeout": 30,
+      "varsToGenerate": []
+    },
+    "parent": "myMenorTeste",
+    "prev": "myMenorInicio",
+    "next": "myMenorQuery"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "myMenorQuery",
+    "type": "DATABASE_MYSQL_QUERY",
+    "settings": {
+      "id": "myMenorQuery",
+      "alias": "myMenorQuery",
+      "version": "v2_0_0",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "connection": "myConexao2",
+      "query": {
+        "type": "longText",
+        "value": "SELECT SLEEP(6) AS dormiu"
+      },
+      "timeout": 1
+    },
+    "parent": "myMenorTeste",
+    "prev": "myConexao2",
+    "next": "myMenorNaoEstourou"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "myMenorNaoEstourou",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "myMenorNaoEstourou",
+      "alias": "myMenorNaoEstourou",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "return `❌ [MySQL] consulta parou no limite próprio de 1s (menor que o padrão de 30s): não estourou (${((Date.now() - actions.myMenorInicio.value) / 1000).toFixed(1)}s)`"
+      }
+    },
+    "parent": "myMenorTeste",
+    "prev": "myMenorQuery"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "myMenorVeredito",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "myMenorVeredito",
+      "alias": "myMenorVeredito",
+      "stopRobotIfError": false,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "const segundos = Number(((Date.now() - actions.myMenorInicio.value) / 1000).toFixed(1))\nconst mensagem = String(actions.myMenorTeste.message)\nconst noTempo = segundos < 1 + 2\nconst ehTimeout = mensagem.includes(\"exceeded the time limit\")\nreturn (ehTimeout && noTempo ? `✅ [MySQL] consulta parou no limite próprio de 1s (menor que o padrão de 30s) em ${segundos}s` : `❌ [MySQL] consulta parou no limite próprio de 1s (menor que o padrão de 30s): ${segundos}s, \"${mensagem}\"`)"
+      }
+    },
+    "parent": "myMenorTeste",
+    "next": "myFechar2"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "myMenorTeste",
+    "type": "Designer:tryCatch",
+    "minimized": false,
+    "settings": {
+      "id": "myMenorTeste",
+      "alias": "myMenorTeste",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "attempts": 1
+    },
+    "tryEntrypoint": "myMenorInicio",
+    "catchEntrypoint": "myMenorVeredito",
+    "parent": "mySecao",
+    "prev": "myDepoisTeste",
+    "next": "myInalcancavelTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "myInalcancavelInicio",
+    "type": "UTILS_CUSTOM_CODE",
+    "settings": {
+      "id": "myInalcancavelInicio",
+      "alias": "myInalcancavelInicio",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": "return Date.now()",
+      "varsToGenerate": [
+        "value"
+      ]
+    },
+    "parent": "myInalcancavelTeste",
+    "next": "myConexaoInalcancavel"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "myConexaoInalcancavel",
+    "type": "DATABASE_MYSQL_CONNECTION",
+    "settings": {
+      "id": "myConexaoInalcancavel",
+      "alias": "myConexaoInalcancavel",
+      "version": "v2_0_0",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "connectionString": {
+        "type": "text",
+        "value": "mysql://root:Roberty_Test_123@10.255.255.1:3306/roberty_test"
+      },
+      "connectTimeout": 3,
+      "varsToGenerate": []
+    },
+    "parent": "myInalcancavelTeste",
+    "prev": "myInalcancavelInicio",
+    "next": "myInalcancavelErro"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "myInalcancavelErro",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "myInalcancavelErro",
+      "alias": "myInalcancavelErro",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "return `❌ [MySQL] conectou em 10.255.255.1?!`"
+      }
+    },
+    "parent": "myInalcancavelTeste",
+    "prev": "myConexaoInalcancavel"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "myInalcancavelVeredito",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "myInalcancavelVeredito",
+      "alias": "myInalcancavelVeredito",
+      "stopRobotIfError": false,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "const segundos = Number(((Date.now() - actions.myInalcancavelInicio.value) / 1000).toFixed(1))\nreturn (segundos < 5 ? `✅ [MySQL] desistiu de conectar em 10.255.255.1 (limite de 3s) em ${segundos}s` : `❌ [MySQL] desistiu de conectar em 10.255.255.1 (limite de 3s): levou ${segundos}s, \"${actions.myInalcancavelTeste.message}\"`)"
+      }
+    },
+    "parent": "myInalcancavelTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "myInalcancavelTeste",
+    "type": "Designer:tryCatch",
+    "minimized": false,
+    "settings": {
+      "id": "myInalcancavelTeste",
+      "alias": "myInalcancavelTeste",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "attempts": 1
+    },
+    "tryEntrypoint": "myInalcancavelInicio",
+    "catchEntrypoint": "myInalcancavelVeredito",
+    "parent": "mySecao",
+    "prev": "myMenorTeste",
+    "next": "myFecharTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "myFecharInicio",
+    "type": "UTILS_CUSTOM_CODE",
+    "settings": {
+      "id": "myFecharInicio",
+      "alias": "myFecharInicio",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": "return Date.now()",
+      "varsToGenerate": [
+        "value"
+      ]
+    },
+    "parent": "myFecharTeste",
+    "next": "myFecharConexao"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "myFecharConexao",
+    "type": "DATABASE_MYSQL_CLOSE",
+    "settings": {
+      "id": "myFecharConexao",
+      "alias": "myFecharConexao",
+      "version": "v1_0_0",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "connection": "myConexao"
+    },
+    "parent": "myFecharTeste",
+    "prev": "myFecharInicio",
+    "next": "myFecharOk"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "myFecharOk",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "myFecharOk",
+      "alias": "myFecharOk",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "return `✅ [MySQL] conexão fechada em ${((Date.now() - actions.myFecharInicio.value) / 1000).toFixed(1)}s`"
+      }
+    },
+    "parent": "myFecharTeste",
+    "prev": "myFecharConexao"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "myFecharErro",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "myFecharErro",
+      "alias": "myFecharErro",
+      "stopRobotIfError": false,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "return `❌ [MySQL] conexão fechada: ${actions.myFecharTeste.message}`"
+      }
+    },
+    "parent": "myFecharTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "myFecharTeste",
+    "type": "Designer:tryCatch",
+    "minimized": false,
+    "settings": {
+      "id": "myFecharTeste",
+      "alias": "myFecharTeste",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "attempts": 1
+    },
+    "tryEntrypoint": "myFecharInicio",
+    "catchEntrypoint": "myFecharErro",
+    "parent": "mySecao",
+    "prev": "myInalcancavelTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "mySecao",
+    "type": "Designer:section",
+    "minimized": false,
+    "settings": {
+      "id": "mySecao",
+      "alias": "mySecao",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "name": "MySQL - teste de tempo limite"
+    },
+    "entrypoint": "myConectarTeste",
+    "prev": "inicio",
+    "next": "pgSecao"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "pgConectarInicio",
+    "type": "UTILS_CUSTOM_CODE",
+    "settings": {
+      "id": "pgConectarInicio",
+      "alias": "pgConectarInicio",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": "return Date.now()",
+      "varsToGenerate": [
+        "value"
+      ]
+    },
+    "parent": "pgConectarTeste",
+    "next": "pgConexao"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "pgConexao",
+    "type": "DATABASE_POSTGRESQL_CONNECTION",
+    "settings": {
+      "id": "pgConexao",
+      "alias": "pgConexao",
+      "version": "v1_0_0",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "connectionString": {
+        "type": "text",
+        "value": "postgresql://postgres:Roberty_Test_123@localhost:15432/roberty_test"
+      },
+      "connectTimeout": 10,
+      "queryTimeout": 3,
+      "varsToGenerate": []
+    },
+    "parent": "pgConectarTeste",
+    "prev": "pgConectarInicio",
+    "next": "pgConectarOk"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "pgConectarOk",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "pgConectarOk",
+      "alias": "pgConectarOk",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "return `✅ [PostgreSQL] conectou (padrão das consultas: 3s) em ${((Date.now() - actions.pgConectarInicio.value) / 1000).toFixed(1)}s`"
+      }
+    },
+    "parent": "pgConectarTeste",
+    "prev": "pgConexao"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "pgConectarErro",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "pgConectarErro",
+      "alias": "pgConectarErro",
+      "stopRobotIfError": false,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "return `❌ [PostgreSQL] conectou (padrão das consultas: 3s): ${actions.pgConectarTeste.message}`"
+      }
+    },
+    "parent": "pgConectarTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "pgConectarTeste",
+    "type": "Designer:tryCatch",
+    "minimized": false,
+    "settings": {
+      "id": "pgConectarTeste",
+      "alias": "pgConectarTeste",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "attempts": 1
+    },
+    "tryEntrypoint": "pgConectarInicio",
+    "catchEntrypoint": "pgConectarErro",
+    "parent": "pgSecao",
+    "next": "pgRapidaTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "pgRapidaInicio",
+    "type": "UTILS_CUSTOM_CODE",
+    "settings": {
+      "id": "pgRapidaInicio",
+      "alias": "pgRapidaInicio",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": "return Date.now()",
+      "varsToGenerate": [
+        "value"
+      ]
+    },
+    "parent": "pgRapidaTeste",
+    "next": "pgRapidaQuery"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "pgRapidaQuery",
+    "type": "DATABASE_POSTGRESQL_QUERY",
+    "settings": {
+      "id": "pgRapidaQuery",
+      "alias": "pgRapidaQuery",
+      "version": "v1_0_0",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "connection": "pgConexao",
+      "query": {
+        "type": "longText",
+        "value": "SELECT 1 AS ok"
+      }
+    },
+    "parent": "pgRapidaTeste",
+    "prev": "pgRapidaInicio",
+    "next": "pgRapidaOk"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "pgRapidaOk",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "pgRapidaOk",
+      "alias": "pgRapidaOk",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "return `✅ [PostgreSQL] consulta rápida herdando o padrão da conexão em ${((Date.now() - actions.pgRapidaInicio.value) / 1000).toFixed(1)}s`"
+      }
+    },
+    "parent": "pgRapidaTeste",
+    "prev": "pgRapidaQuery"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "pgRapidaErro",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "pgRapidaErro",
+      "alias": "pgRapidaErro",
+      "stopRobotIfError": false,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "return `❌ [PostgreSQL] consulta rápida herdando o padrão da conexão: ${actions.pgRapidaTeste.message}`"
+      }
+    },
+    "parent": "pgRapidaTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "pgRapidaTeste",
+    "type": "Designer:tryCatch",
+    "minimized": false,
+    "settings": {
+      "id": "pgRapidaTeste",
+      "alias": "pgRapidaTeste",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "attempts": 1
+    },
+    "tryEntrypoint": "pgRapidaInicio",
+    "catchEntrypoint": "pgRapidaErro",
+    "parent": "pgSecao",
+    "prev": "pgConectarTeste",
+    "next": "pgMaiorTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "pgMaiorInicio",
+    "type": "UTILS_CUSTOM_CODE",
+    "settings": {
+      "id": "pgMaiorInicio",
+      "alias": "pgMaiorInicio",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": "return Date.now()",
+      "varsToGenerate": [
+        "value"
+      ]
+    },
+    "parent": "pgMaiorTeste",
+    "next": "pgMaiorQuery"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "pgMaiorQuery",
+    "type": "DATABASE_POSTGRESQL_QUERY",
+    "settings": {
+      "id": "pgMaiorQuery",
+      "alias": "pgMaiorQuery",
+      "version": "v1_0_0",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "connection": "pgConexao",
+      "query": {
+        "type": "longText",
+        "value": "SELECT pg_sleep(6)"
+      },
+      "timeout": 15
+    },
+    "parent": "pgMaiorTeste",
+    "prev": "pgMaiorInicio",
+    "next": "pgMaiorOk"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "pgMaiorOk",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "pgMaiorOk",
+      "alias": "pgMaiorOk",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "return `✅ [PostgreSQL] consulta de 6s com limite próprio de 15s (maior que o padrão) em ${((Date.now() - actions.pgMaiorInicio.value) / 1000).toFixed(1)}s`"
+      }
+    },
+    "parent": "pgMaiorTeste",
+    "prev": "pgMaiorQuery"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "pgMaiorErro",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "pgMaiorErro",
+      "alias": "pgMaiorErro",
+      "stopRobotIfError": false,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "return `❌ [PostgreSQL] consulta de 6s com limite próprio de 15s (maior que o padrão): ${actions.pgMaiorTeste.message}`"
+      }
+    },
+    "parent": "pgMaiorTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "pgMaiorTeste",
+    "type": "Designer:tryCatch",
+    "minimized": false,
+    "settings": {
+      "id": "pgMaiorTeste",
+      "alias": "pgMaiorTeste",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "attempts": 1
+    },
+    "tryEntrypoint": "pgMaiorInicio",
+    "catchEntrypoint": "pgMaiorErro",
+    "parent": "pgSecao",
+    "prev": "pgRapidaTeste",
+    "next": "pgZeroTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "pgZeroInicio",
+    "type": "UTILS_CUSTOM_CODE",
+    "settings": {
+      "id": "pgZeroInicio",
+      "alias": "pgZeroInicio",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": "return Date.now()",
+      "varsToGenerate": [
+        "value"
+      ]
+    },
+    "parent": "pgZeroTeste",
+    "next": "pgZeroQuery"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "pgZeroQuery",
+    "type": "DATABASE_POSTGRESQL_QUERY",
+    "settings": {
+      "id": "pgZeroQuery",
+      "alias": "pgZeroQuery",
+      "version": "v1_0_0",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "connection": "pgConexao",
+      "query": {
+        "type": "longText",
+        "value": "SELECT pg_sleep(6)"
+      },
+      "timeout": 0
+    },
+    "parent": "pgZeroTeste",
+    "prev": "pgZeroInicio",
+    "next": "pgZeroOk"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "pgZeroOk",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "pgZeroOk",
+      "alias": "pgZeroOk",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "return `✅ [PostgreSQL] consulta de 6s com limite 0 (sem limite) em ${((Date.now() - actions.pgZeroInicio.value) / 1000).toFixed(1)}s`"
+      }
+    },
+    "parent": "pgZeroTeste",
+    "prev": "pgZeroQuery"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "pgZeroErro",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "pgZeroErro",
+      "alias": "pgZeroErro",
+      "stopRobotIfError": false,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "return `❌ [PostgreSQL] consulta de 6s com limite 0 (sem limite): ${actions.pgZeroTeste.message}`"
+      }
+    },
+    "parent": "pgZeroTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "pgZeroTeste",
+    "type": "Designer:tryCatch",
+    "minimized": false,
+    "settings": {
+      "id": "pgZeroTeste",
+      "alias": "pgZeroTeste",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "attempts": 1
+    },
+    "tryEntrypoint": "pgZeroInicio",
+    "catchEntrypoint": "pgZeroErro",
+    "parent": "pgSecao",
+    "prev": "pgMaiorTeste",
+    "next": "pgPadraoTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "pgPadraoInicio",
+    "type": "UTILS_CUSTOM_CODE",
+    "settings": {
+      "id": "pgPadraoInicio",
+      "alias": "pgPadraoInicio",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": "return Date.now()",
+      "varsToGenerate": [
+        "value"
+      ]
+    },
+    "parent": "pgPadraoTeste",
+    "next": "pgPadraoQuery"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "pgPadraoQuery",
+    "type": "DATABASE_POSTGRESQL_QUERY",
+    "settings": {
+      "id": "pgPadraoQuery",
+      "alias": "pgPadraoQuery",
+      "version": "v1_0_0",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "connection": "pgConexao",
+      "query": {
+        "type": "longText",
+        "value": "SELECT pg_sleep(6)"
+      }
+    },
+    "parent": "pgPadraoTeste",
+    "prev": "pgPadraoInicio",
+    "next": "pgPadraoNaoEstourou"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "pgPadraoNaoEstourou",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "pgPadraoNaoEstourou",
+      "alias": "pgPadraoNaoEstourou",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "return `❌ [PostgreSQL] consulta de 6s parou no padrão da conexão (3s): não estourou (${((Date.now() - actions.pgPadraoInicio.value) / 1000).toFixed(1)}s)`"
+      }
+    },
+    "parent": "pgPadraoTeste",
+    "prev": "pgPadraoQuery"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "pgPadraoVeredito",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "pgPadraoVeredito",
+      "alias": "pgPadraoVeredito",
+      "stopRobotIfError": false,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "const segundos = Number(((Date.now() - actions.pgPadraoInicio.value) / 1000).toFixed(1))\nconst mensagem = String(actions.pgPadraoTeste.message)\nconst noTempo = segundos < 3 + 2\nconst ehTimeout = mensagem.includes(\"exceeded the time limit\")\nreturn (ehTimeout && noTempo ? `✅ [PostgreSQL] consulta de 6s parou no padrão da conexão (3s) em ${segundos}s` : `❌ [PostgreSQL] consulta de 6s parou no padrão da conexão (3s): ${segundos}s, \"${mensagem}\"`)"
+      }
+    },
+    "parent": "pgPadraoTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "pgPadraoTeste",
+    "type": "Designer:tryCatch",
+    "minimized": false,
+    "settings": {
+      "id": "pgPadraoTeste",
+      "alias": "pgPadraoTeste",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "attempts": 1
+    },
+    "tryEntrypoint": "pgPadraoInicio",
+    "catchEntrypoint": "pgPadraoVeredito",
+    "parent": "pgSecao",
+    "prev": "pgZeroTeste",
+    "next": "pgDepoisTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "pgDepoisInicio",
+    "type": "UTILS_CUSTOM_CODE",
+    "settings": {
+      "id": "pgDepoisInicio",
+      "alias": "pgDepoisInicio",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": "return Date.now()",
+      "varsToGenerate": [
+        "value"
+      ]
+    },
+    "parent": "pgDepoisTeste",
+    "next": "pgDepoisQuery"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "pgDepoisQuery",
+    "type": "DATABASE_POSTGRESQL_QUERY",
+    "settings": {
+      "id": "pgDepoisQuery",
+      "alias": "pgDepoisQuery",
+      "version": "v1_0_0",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "connection": "pgConexao",
+      "query": {
+        "type": "longText",
+        "value": "SELECT 1 AS ok"
+      },
+      "timeout": 10
+    },
+    "parent": "pgDepoisTeste",
+    "prev": "pgDepoisInicio",
+    "next": "pgDepoisOk"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "pgDepoisOk",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "pgDepoisOk",
+      "alias": "pgDepoisOk",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "return `✅ [PostgreSQL] conexão continua utilizável depois do timeout em ${((Date.now() - actions.pgDepoisInicio.value) / 1000).toFixed(1)}s`"
+      }
+    },
+    "parent": "pgDepoisTeste",
+    "prev": "pgDepoisQuery"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "pgDepoisErro",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "pgDepoisErro",
+      "alias": "pgDepoisErro",
+      "stopRobotIfError": false,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "return `❌ [PostgreSQL] conexão continua utilizável depois do timeout: ${actions.pgDepoisTeste.message}`"
+      }
+    },
+    "parent": "pgDepoisTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "pgDepoisTeste",
+    "type": "Designer:tryCatch",
+    "minimized": false,
+    "settings": {
+      "id": "pgDepoisTeste",
+      "alias": "pgDepoisTeste",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "attempts": 1
+    },
+    "tryEntrypoint": "pgDepoisInicio",
+    "catchEntrypoint": "pgDepoisErro",
+    "parent": "pgSecao",
+    "prev": "pgPadraoTeste",
+    "next": "pgMenorTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "pgFechar2",
+    "type": "DATABASE_POSTGRESQL_CLOSE",
+    "settings": {
+      "id": "pgFechar2",
+      "alias": "pgFechar2",
+      "version": "v1_0_0",
+      "stopRobotIfError": false,
+      "numberOfAttempts": 1,
+      "connection": "pgConexao2"
+    },
+    "parent": "pgMenorTeste",
+    "prev": "pgMenorVeredito"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "pgMenorInicio",
+    "type": "UTILS_CUSTOM_CODE",
+    "settings": {
+      "id": "pgMenorInicio",
+      "alias": "pgMenorInicio",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": "return Date.now()",
+      "varsToGenerate": [
+        "value"
+      ]
+    },
+    "parent": "pgMenorTeste",
+    "next": "pgConexao2"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "pgConexao2",
+    "type": "DATABASE_POSTGRESQL_CONNECTION",
+    "settings": {
+      "id": "pgConexao2",
+      "alias": "pgConexao2",
+      "version": "v1_0_0",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "connectionString": {
+        "type": "text",
+        "value": "postgresql://postgres:Roberty_Test_123@localhost:15432/roberty_test"
+      },
+      "connectTimeout": 10,
+      "queryTimeout": 30,
+      "varsToGenerate": []
+    },
+    "parent": "pgMenorTeste",
+    "prev": "pgMenorInicio",
+    "next": "pgMenorQuery"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "pgMenorQuery",
+    "type": "DATABASE_POSTGRESQL_QUERY",
+    "settings": {
+      "id": "pgMenorQuery",
+      "alias": "pgMenorQuery",
+      "version": "v1_0_0",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "connection": "pgConexao2",
+      "query": {
+        "type": "longText",
+        "value": "SELECT pg_sleep(6)"
+      },
+      "timeout": 1
+    },
+    "parent": "pgMenorTeste",
+    "prev": "pgConexao2",
+    "next": "pgMenorNaoEstourou"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "pgMenorNaoEstourou",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "pgMenorNaoEstourou",
+      "alias": "pgMenorNaoEstourou",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "return `❌ [PostgreSQL] consulta parou no limite próprio de 1s (menor que o padrão de 30s): não estourou (${((Date.now() - actions.pgMenorInicio.value) / 1000).toFixed(1)}s)`"
+      }
+    },
+    "parent": "pgMenorTeste",
+    "prev": "pgMenorQuery"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "pgMenorVeredito",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "pgMenorVeredito",
+      "alias": "pgMenorVeredito",
+      "stopRobotIfError": false,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "const segundos = Number(((Date.now() - actions.pgMenorInicio.value) / 1000).toFixed(1))\nconst mensagem = String(actions.pgMenorTeste.message)\nconst noTempo = segundos < 1 + 2\nconst ehTimeout = mensagem.includes(\"exceeded the time limit\")\nreturn (ehTimeout && noTempo ? `✅ [PostgreSQL] consulta parou no limite próprio de 1s (menor que o padrão de 30s) em ${segundos}s` : `❌ [PostgreSQL] consulta parou no limite próprio de 1s (menor que o padrão de 30s): ${segundos}s, \"${mensagem}\"`)"
+      }
+    },
+    "parent": "pgMenorTeste",
+    "next": "pgFechar2"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "pgMenorTeste",
+    "type": "Designer:tryCatch",
+    "minimized": false,
+    "settings": {
+      "id": "pgMenorTeste",
+      "alias": "pgMenorTeste",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "attempts": 1
+    },
+    "tryEntrypoint": "pgMenorInicio",
+    "catchEntrypoint": "pgMenorVeredito",
+    "parent": "pgSecao",
+    "prev": "pgDepoisTeste",
+    "next": "pgInalcancavelTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "pgInalcancavelInicio",
+    "type": "UTILS_CUSTOM_CODE",
+    "settings": {
+      "id": "pgInalcancavelInicio",
+      "alias": "pgInalcancavelInicio",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": "return Date.now()",
+      "varsToGenerate": [
+        "value"
+      ]
+    },
+    "parent": "pgInalcancavelTeste",
+    "next": "pgConexaoInalcancavel"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "pgConexaoInalcancavel",
+    "type": "DATABASE_POSTGRESQL_CONNECTION",
+    "settings": {
+      "id": "pgConexaoInalcancavel",
+      "alias": "pgConexaoInalcancavel",
+      "version": "v1_0_0",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "connectionString": {
+        "type": "text",
+        "value": "postgresql://postgres:Roberty_Test_123@10.255.255.1:5432/roberty_test"
+      },
+      "connectTimeout": 3,
+      "varsToGenerate": []
+    },
+    "parent": "pgInalcancavelTeste",
+    "prev": "pgInalcancavelInicio",
+    "next": "pgInalcancavelErro"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "pgInalcancavelErro",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "pgInalcancavelErro",
+      "alias": "pgInalcancavelErro",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "return `❌ [PostgreSQL] conectou em 10.255.255.1?!`"
+      }
+    },
+    "parent": "pgInalcancavelTeste",
+    "prev": "pgConexaoInalcancavel"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "pgInalcancavelVeredito",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "pgInalcancavelVeredito",
+      "alias": "pgInalcancavelVeredito",
+      "stopRobotIfError": false,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "const segundos = Number(((Date.now() - actions.pgInalcancavelInicio.value) / 1000).toFixed(1))\nreturn (segundos < 5 ? `✅ [PostgreSQL] desistiu de conectar em 10.255.255.1 (limite de 3s) em ${segundos}s` : `❌ [PostgreSQL] desistiu de conectar em 10.255.255.1 (limite de 3s): levou ${segundos}s, \"${actions.pgInalcancavelTeste.message}\"`)"
+      }
+    },
+    "parent": "pgInalcancavelTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "pgInalcancavelTeste",
+    "type": "Designer:tryCatch",
+    "minimized": false,
+    "settings": {
+      "id": "pgInalcancavelTeste",
+      "alias": "pgInalcancavelTeste",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "attempts": 1
+    },
+    "tryEntrypoint": "pgInalcancavelInicio",
+    "catchEntrypoint": "pgInalcancavelVeredito",
+    "parent": "pgSecao",
+    "prev": "pgMenorTeste",
+    "next": "pgFecharTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "pgFecharInicio",
+    "type": "UTILS_CUSTOM_CODE",
+    "settings": {
+      "id": "pgFecharInicio",
+      "alias": "pgFecharInicio",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": "return Date.now()",
+      "varsToGenerate": [
+        "value"
+      ]
+    },
+    "parent": "pgFecharTeste",
+    "next": "pgFecharConexao"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "pgFecharConexao",
+    "type": "DATABASE_POSTGRESQL_CLOSE",
+    "settings": {
+      "id": "pgFecharConexao",
+      "alias": "pgFecharConexao",
+      "version": "v1_0_0",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "connection": "pgConexao"
+    },
+    "parent": "pgFecharTeste",
+    "prev": "pgFecharInicio",
+    "next": "pgFecharOk"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "pgFecharOk",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "pgFecharOk",
+      "alias": "pgFecharOk",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "return `✅ [PostgreSQL] conexão fechada em ${((Date.now() - actions.pgFecharInicio.value) / 1000).toFixed(1)}s`"
+      }
+    },
+    "parent": "pgFecharTeste",
+    "prev": "pgFecharConexao"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "pgFecharErro",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "pgFecharErro",
+      "alias": "pgFecharErro",
+      "stopRobotIfError": false,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "return `❌ [PostgreSQL] conexão fechada: ${actions.pgFecharTeste.message}`"
+      }
+    },
+    "parent": "pgFecharTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "pgFecharTeste",
+    "type": "Designer:tryCatch",
+    "minimized": false,
+    "settings": {
+      "id": "pgFecharTeste",
+      "alias": "pgFecharTeste",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "attempts": 1
+    },
+    "tryEntrypoint": "pgFecharInicio",
+    "catchEntrypoint": "pgFecharErro",
+    "parent": "pgSecao",
+    "prev": "pgInalcancavelTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "pgSecao",
+    "type": "Designer:section",
+    "minimized": false,
+    "settings": {
+      "id": "pgSecao",
+      "alias": "pgSecao",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "name": "PostgreSQL - teste de tempo limite"
+    },
+    "entrypoint": "pgConectarTeste",
+    "prev": "mySecao",
+    "next": "msSecao"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "msConectarInicio",
+    "type": "UTILS_CUSTOM_CODE",
+    "settings": {
+      "id": "msConectarInicio",
+      "alias": "msConectarInicio",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": "return Date.now()",
+      "varsToGenerate": [
+        "value"
+      ]
+    },
+    "parent": "msConectarTeste",
+    "next": "msConexao"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "msConexao",
+    "type": "DATABASE_SQLSERVER_CONNECTION",
+    "settings": {
+      "id": "msConexao",
+      "alias": "msConexao",
+      "version": "v1_0_0",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "connectionString": {
+        "type": "text",
+        "value": "Server=localhost,11433;User Id=sa;Password=Roberty_Test_123;Encrypt=true;TrustServerCertificate=true"
+      },
+      "connectTimeout": 10,
+      "queryTimeout": 3,
+      "varsToGenerate": []
+    },
+    "parent": "msConectarTeste",
+    "prev": "msConectarInicio",
+    "next": "msConectarOk"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "msConectarOk",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "msConectarOk",
+      "alias": "msConectarOk",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "return `✅ [SQL Server] conectou (padrão das consultas: 3s) em ${((Date.now() - actions.msConectarInicio.value) / 1000).toFixed(1)}s`"
+      }
+    },
+    "parent": "msConectarTeste",
+    "prev": "msConexao"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "msConectarErro",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "msConectarErro",
+      "alias": "msConectarErro",
+      "stopRobotIfError": false,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "return `❌ [SQL Server] conectou (padrão das consultas: 3s): ${actions.msConectarTeste.message}`"
+      }
+    },
+    "parent": "msConectarTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "msConectarTeste",
+    "type": "Designer:tryCatch",
+    "minimized": false,
+    "settings": {
+      "id": "msConectarTeste",
+      "alias": "msConectarTeste",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "attempts": 1
+    },
+    "tryEntrypoint": "msConectarInicio",
+    "catchEntrypoint": "msConectarErro",
+    "parent": "msSecao",
+    "next": "msRapidaTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "msRapidaInicio",
+    "type": "UTILS_CUSTOM_CODE",
+    "settings": {
+      "id": "msRapidaInicio",
+      "alias": "msRapidaInicio",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": "return Date.now()",
+      "varsToGenerate": [
+        "value"
+      ]
+    },
+    "parent": "msRapidaTeste",
+    "next": "msRapidaQuery"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "msRapidaQuery",
+    "type": "DATABASE_SQLSERVER_QUERY",
+    "settings": {
+      "id": "msRapidaQuery",
+      "alias": "msRapidaQuery",
+      "version": "v1_0_0",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "connection": "msConexao",
+      "query": {
+        "type": "longText",
+        "value": "SELECT 1 AS ok"
+      }
+    },
+    "parent": "msRapidaTeste",
+    "prev": "msRapidaInicio",
+    "next": "msRapidaOk"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "msRapidaOk",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "msRapidaOk",
+      "alias": "msRapidaOk",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "return `✅ [SQL Server] consulta rápida herdando o padrão da conexão em ${((Date.now() - actions.msRapidaInicio.value) / 1000).toFixed(1)}s`"
+      }
+    },
+    "parent": "msRapidaTeste",
+    "prev": "msRapidaQuery"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "msRapidaErro",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "msRapidaErro",
+      "alias": "msRapidaErro",
+      "stopRobotIfError": false,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "return `❌ [SQL Server] consulta rápida herdando o padrão da conexão: ${actions.msRapidaTeste.message}`"
+      }
+    },
+    "parent": "msRapidaTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "msRapidaTeste",
+    "type": "Designer:tryCatch",
+    "minimized": false,
+    "settings": {
+      "id": "msRapidaTeste",
+      "alias": "msRapidaTeste",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "attempts": 1
+    },
+    "tryEntrypoint": "msRapidaInicio",
+    "catchEntrypoint": "msRapidaErro",
+    "parent": "msSecao",
+    "prev": "msConectarTeste",
+    "next": "msMaiorTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "msMaiorInicio",
+    "type": "UTILS_CUSTOM_CODE",
+    "settings": {
+      "id": "msMaiorInicio",
+      "alias": "msMaiorInicio",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": "return Date.now()",
+      "varsToGenerate": [
+        "value"
+      ]
+    },
+    "parent": "msMaiorTeste",
+    "next": "msMaiorQuery"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "msMaiorQuery",
+    "type": "DATABASE_SQLSERVER_QUERY",
+    "settings": {
+      "id": "msMaiorQuery",
+      "alias": "msMaiorQuery",
+      "version": "v1_0_0",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "connection": "msConexao",
+      "query": {
+        "type": "longText",
+        "value": "WAITFOR DELAY '00:00:06'"
+      },
+      "timeout": 15
+    },
+    "parent": "msMaiorTeste",
+    "prev": "msMaiorInicio",
+    "next": "msMaiorOk"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "msMaiorOk",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "msMaiorOk",
+      "alias": "msMaiorOk",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "return `✅ [SQL Server] consulta de 6s com limite próprio de 15s (maior que o padrão) em ${((Date.now() - actions.msMaiorInicio.value) / 1000).toFixed(1)}s`"
+      }
+    },
+    "parent": "msMaiorTeste",
+    "prev": "msMaiorQuery"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "msMaiorErro",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "msMaiorErro",
+      "alias": "msMaiorErro",
+      "stopRobotIfError": false,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "return `❌ [SQL Server] consulta de 6s com limite próprio de 15s (maior que o padrão): ${actions.msMaiorTeste.message}`"
+      }
+    },
+    "parent": "msMaiorTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "msMaiorTeste",
+    "type": "Designer:tryCatch",
+    "minimized": false,
+    "settings": {
+      "id": "msMaiorTeste",
+      "alias": "msMaiorTeste",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "attempts": 1
+    },
+    "tryEntrypoint": "msMaiorInicio",
+    "catchEntrypoint": "msMaiorErro",
+    "parent": "msSecao",
+    "prev": "msRapidaTeste",
+    "next": "msZeroTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "msZeroInicio",
+    "type": "UTILS_CUSTOM_CODE",
+    "settings": {
+      "id": "msZeroInicio",
+      "alias": "msZeroInicio",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": "return Date.now()",
+      "varsToGenerate": [
+        "value"
+      ]
+    },
+    "parent": "msZeroTeste",
+    "next": "msZeroQuery"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "msZeroQuery",
+    "type": "DATABASE_SQLSERVER_QUERY",
+    "settings": {
+      "id": "msZeroQuery",
+      "alias": "msZeroQuery",
+      "version": "v1_0_0",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "connection": "msConexao",
+      "query": {
+        "type": "longText",
+        "value": "WAITFOR DELAY '00:00:06'"
+      },
+      "timeout": 0
+    },
+    "parent": "msZeroTeste",
+    "prev": "msZeroInicio",
+    "next": "msZeroOk"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "msZeroOk",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "msZeroOk",
+      "alias": "msZeroOk",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "return `✅ [SQL Server] consulta de 6s com limite 0 (sem limite) em ${((Date.now() - actions.msZeroInicio.value) / 1000).toFixed(1)}s`"
+      }
+    },
+    "parent": "msZeroTeste",
+    "prev": "msZeroQuery"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "msZeroErro",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "msZeroErro",
+      "alias": "msZeroErro",
+      "stopRobotIfError": false,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "return `❌ [SQL Server] consulta de 6s com limite 0 (sem limite): ${actions.msZeroTeste.message}`"
+      }
+    },
+    "parent": "msZeroTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "msZeroTeste",
+    "type": "Designer:tryCatch",
+    "minimized": false,
+    "settings": {
+      "id": "msZeroTeste",
+      "alias": "msZeroTeste",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "attempts": 1
+    },
+    "tryEntrypoint": "msZeroInicio",
+    "catchEntrypoint": "msZeroErro",
+    "parent": "msSecao",
+    "prev": "msMaiorTeste",
+    "next": "msPadraoTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "msPadraoInicio",
+    "type": "UTILS_CUSTOM_CODE",
+    "settings": {
+      "id": "msPadraoInicio",
+      "alias": "msPadraoInicio",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": "return Date.now()",
+      "varsToGenerate": [
+        "value"
+      ]
+    },
+    "parent": "msPadraoTeste",
+    "next": "msPadraoQuery"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "msPadraoQuery",
+    "type": "DATABASE_SQLSERVER_QUERY",
+    "settings": {
+      "id": "msPadraoQuery",
+      "alias": "msPadraoQuery",
+      "version": "v1_0_0",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "connection": "msConexao",
+      "query": {
+        "type": "longText",
+        "value": "WAITFOR DELAY '00:00:06'"
+      }
+    },
+    "parent": "msPadraoTeste",
+    "prev": "msPadraoInicio",
+    "next": "msPadraoNaoEstourou"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "msPadraoNaoEstourou",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "msPadraoNaoEstourou",
+      "alias": "msPadraoNaoEstourou",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "return `❌ [SQL Server] consulta de 6s parou no padrão da conexão (3s): não estourou (${((Date.now() - actions.msPadraoInicio.value) / 1000).toFixed(1)}s)`"
+      }
+    },
+    "parent": "msPadraoTeste",
+    "prev": "msPadraoQuery"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "msPadraoVeredito",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "msPadraoVeredito",
+      "alias": "msPadraoVeredito",
+      "stopRobotIfError": false,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "const segundos = Number(((Date.now() - actions.msPadraoInicio.value) / 1000).toFixed(1))\nconst mensagem = String(actions.msPadraoTeste.message)\nconst noTempo = segundos < 3 + 2\nconst ehTimeout = mensagem.includes(\"exceeded the time limit\")\nreturn (ehTimeout && noTempo ? `✅ [SQL Server] consulta de 6s parou no padrão da conexão (3s) em ${segundos}s` : `❌ [SQL Server] consulta de 6s parou no padrão da conexão (3s): ${segundos}s, \"${mensagem}\"`)"
+      }
+    },
+    "parent": "msPadraoTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "msPadraoTeste",
+    "type": "Designer:tryCatch",
+    "minimized": false,
+    "settings": {
+      "id": "msPadraoTeste",
+      "alias": "msPadraoTeste",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "attempts": 1
+    },
+    "tryEntrypoint": "msPadraoInicio",
+    "catchEntrypoint": "msPadraoVeredito",
+    "parent": "msSecao",
+    "prev": "msZeroTeste",
+    "next": "msDepoisTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "msDepoisInicio",
+    "type": "UTILS_CUSTOM_CODE",
+    "settings": {
+      "id": "msDepoisInicio",
+      "alias": "msDepoisInicio",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": "return Date.now()",
+      "varsToGenerate": [
+        "value"
+      ]
+    },
+    "parent": "msDepoisTeste",
+    "next": "msDepoisQuery"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "msDepoisQuery",
+    "type": "DATABASE_SQLSERVER_QUERY",
+    "settings": {
+      "id": "msDepoisQuery",
+      "alias": "msDepoisQuery",
+      "version": "v1_0_0",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "connection": "msConexao",
+      "query": {
+        "type": "longText",
+        "value": "SELECT 1 AS ok"
+      },
+      "timeout": 10
+    },
+    "parent": "msDepoisTeste",
+    "prev": "msDepoisInicio",
+    "next": "msDepoisOk"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "msDepoisOk",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "msDepoisOk",
+      "alias": "msDepoisOk",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "return `✅ [SQL Server] conexão continua utilizável depois do timeout em ${((Date.now() - actions.msDepoisInicio.value) / 1000).toFixed(1)}s`"
+      }
+    },
+    "parent": "msDepoisTeste",
+    "prev": "msDepoisQuery"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "msDepoisErro",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "msDepoisErro",
+      "alias": "msDepoisErro",
+      "stopRobotIfError": false,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "return `❌ [SQL Server] conexão continua utilizável depois do timeout: ${actions.msDepoisTeste.message}`"
+      }
+    },
+    "parent": "msDepoisTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "msDepoisTeste",
+    "type": "Designer:tryCatch",
+    "minimized": false,
+    "settings": {
+      "id": "msDepoisTeste",
+      "alias": "msDepoisTeste",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "attempts": 1
+    },
+    "tryEntrypoint": "msDepoisInicio",
+    "catchEntrypoint": "msDepoisErro",
+    "parent": "msSecao",
+    "prev": "msPadraoTeste",
+    "next": "msMenorTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "msFechar2",
+    "type": "DATABASE_SQLSERVER_CLOSE",
+    "settings": {
+      "id": "msFechar2",
+      "alias": "msFechar2",
+      "version": "v1_0_0",
+      "stopRobotIfError": false,
+      "numberOfAttempts": 1,
+      "connection": "msConexao2"
+    },
+    "parent": "msMenorTeste",
+    "prev": "msMenorVeredito"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "msMenorInicio",
+    "type": "UTILS_CUSTOM_CODE",
+    "settings": {
+      "id": "msMenorInicio",
+      "alias": "msMenorInicio",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": "return Date.now()",
+      "varsToGenerate": [
+        "value"
+      ]
+    },
+    "parent": "msMenorTeste",
+    "next": "msConexao2"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "msConexao2",
+    "type": "DATABASE_SQLSERVER_CONNECTION",
+    "settings": {
+      "id": "msConexao2",
+      "alias": "msConexao2",
+      "version": "v1_0_0",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "connectionString": {
+        "type": "text",
+        "value": "Server=localhost,11433;User Id=sa;Password=Roberty_Test_123;Encrypt=true;TrustServerCertificate=true"
+      },
+      "connectTimeout": 10,
+      "queryTimeout": 30,
+      "varsToGenerate": []
+    },
+    "parent": "msMenorTeste",
+    "prev": "msMenorInicio",
+    "next": "msMenorQuery"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "msMenorQuery",
+    "type": "DATABASE_SQLSERVER_QUERY",
+    "settings": {
+      "id": "msMenorQuery",
+      "alias": "msMenorQuery",
+      "version": "v1_0_0",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "connection": "msConexao2",
+      "query": {
+        "type": "longText",
+        "value": "WAITFOR DELAY '00:00:06'"
+      },
+      "timeout": 1
+    },
+    "parent": "msMenorTeste",
+    "prev": "msConexao2",
+    "next": "msMenorNaoEstourou"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "msMenorNaoEstourou",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "msMenorNaoEstourou",
+      "alias": "msMenorNaoEstourou",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "return `❌ [SQL Server] consulta parou no limite próprio de 1s (menor que o padrão de 30s): não estourou (${((Date.now() - actions.msMenorInicio.value) / 1000).toFixed(1)}s)`"
+      }
+    },
+    "parent": "msMenorTeste",
+    "prev": "msMenorQuery"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "msMenorVeredito",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "msMenorVeredito",
+      "alias": "msMenorVeredito",
+      "stopRobotIfError": false,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "const segundos = Number(((Date.now() - actions.msMenorInicio.value) / 1000).toFixed(1))\nconst mensagem = String(actions.msMenorTeste.message)\nconst noTempo = segundos < 1 + 2\nconst ehTimeout = mensagem.includes(\"exceeded the time limit\")\nreturn (ehTimeout && noTempo ? `✅ [SQL Server] consulta parou no limite próprio de 1s (menor que o padrão de 30s) em ${segundos}s` : `❌ [SQL Server] consulta parou no limite próprio de 1s (menor que o padrão de 30s): ${segundos}s, \"${mensagem}\"`)"
+      }
+    },
+    "parent": "msMenorTeste",
+    "next": "msFechar2"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "msMenorTeste",
+    "type": "Designer:tryCatch",
+    "minimized": false,
+    "settings": {
+      "id": "msMenorTeste",
+      "alias": "msMenorTeste",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "attempts": 1
+    },
+    "tryEntrypoint": "msMenorInicio",
+    "catchEntrypoint": "msMenorVeredito",
+    "parent": "msSecao",
+    "prev": "msDepoisTeste",
+    "next": "msInalcancavelTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "msInalcancavelInicio",
+    "type": "UTILS_CUSTOM_CODE",
+    "settings": {
+      "id": "msInalcancavelInicio",
+      "alias": "msInalcancavelInicio",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": "return Date.now()",
+      "varsToGenerate": [
+        "value"
+      ]
+    },
+    "parent": "msInalcancavelTeste",
+    "next": "msConexaoInalcancavel"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "msConexaoInalcancavel",
+    "type": "DATABASE_SQLSERVER_CONNECTION",
+    "settings": {
+      "id": "msConexaoInalcancavel",
+      "alias": "msConexaoInalcancavel",
+      "version": "v1_0_0",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "connectionString": {
+        "type": "text",
+        "value": "Server=10.255.255.1,1433;User Id=sa;Password=Roberty_Test_123;Encrypt=true;TrustServerCertificate=true"
+      },
+      "connectTimeout": 3,
+      "varsToGenerate": []
+    },
+    "parent": "msInalcancavelTeste",
+    "prev": "msInalcancavelInicio",
+    "next": "msInalcancavelErro"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "msInalcancavelErro",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "msInalcancavelErro",
+      "alias": "msInalcancavelErro",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "return `❌ [SQL Server] conectou em 10.255.255.1?!`"
+      }
+    },
+    "parent": "msInalcancavelTeste",
+    "prev": "msConexaoInalcancavel"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "msInalcancavelVeredito",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "msInalcancavelVeredito",
+      "alias": "msInalcancavelVeredito",
+      "stopRobotIfError": false,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "const segundos = Number(((Date.now() - actions.msInalcancavelInicio.value) / 1000).toFixed(1))\nreturn (segundos < 5 ? `✅ [SQL Server] desistiu de conectar em 10.255.255.1 (limite de 3s) em ${segundos}s` : `❌ [SQL Server] desistiu de conectar em 10.255.255.1 (limite de 3s): levou ${segundos}s, \"${actions.msInalcancavelTeste.message}\"`)"
+      }
+    },
+    "parent": "msInalcancavelTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "msInalcancavelTeste",
+    "type": "Designer:tryCatch",
+    "minimized": false,
+    "settings": {
+      "id": "msInalcancavelTeste",
+      "alias": "msInalcancavelTeste",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "attempts": 1
+    },
+    "tryEntrypoint": "msInalcancavelInicio",
+    "catchEntrypoint": "msInalcancavelVeredito",
+    "parent": "msSecao",
+    "prev": "msMenorTeste",
+    "next": "msFecharTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "msFecharInicio",
+    "type": "UTILS_CUSTOM_CODE",
+    "settings": {
+      "id": "msFecharInicio",
+      "alias": "msFecharInicio",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": "return Date.now()",
+      "varsToGenerate": [
+        "value"
+      ]
+    },
+    "parent": "msFecharTeste",
+    "next": "msFecharConexao"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "msFecharConexao",
+    "type": "DATABASE_SQLSERVER_CLOSE",
+    "settings": {
+      "id": "msFecharConexao",
+      "alias": "msFecharConexao",
+      "version": "v1_0_0",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "connection": "msConexao"
+    },
+    "parent": "msFecharTeste",
+    "prev": "msFecharInicio",
+    "next": "msFecharOk"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "msFecharOk",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "msFecharOk",
+      "alias": "msFecharOk",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "return `✅ [SQL Server] conexão fechada em ${((Date.now() - actions.msFecharInicio.value) / 1000).toFixed(1)}s`"
+      }
+    },
+    "parent": "msFecharTeste",
+    "prev": "msFecharConexao"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "msFecharErro",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "msFecharErro",
+      "alias": "msFecharErro",
+      "stopRobotIfError": false,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "return `❌ [SQL Server] conexão fechada: ${actions.msFecharTeste.message}`"
+      }
+    },
+    "parent": "msFecharTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "msFecharTeste",
+    "type": "Designer:tryCatch",
+    "minimized": false,
+    "settings": {
+      "id": "msFecharTeste",
+      "alias": "msFecharTeste",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "attempts": 1
+    },
+    "tryEntrypoint": "msFecharInicio",
+    "catchEntrypoint": "msFecharErro",
+    "parent": "msSecao",
+    "prev": "msInalcancavelTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "msSecao",
+    "type": "Designer:section",
+    "minimized": false,
+    "settings": {
+      "id": "msSecao",
+      "alias": "msSecao",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "name": "SQL Server - teste de tempo limite"
+    },
+    "entrypoint": "msConectarTeste",
+    "prev": "pgSecao",
+    "next": "orSecao"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "orConectarInicio",
+    "type": "UTILS_CUSTOM_CODE",
+    "settings": {
+      "id": "orConectarInicio",
+      "alias": "orConectarInicio",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": "return Date.now()",
+      "varsToGenerate": [
+        "value"
+      ]
+    },
+    "parent": "orConectarTeste",
+    "next": "orConexao"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "orConexao",
+    "type": "DATABASE_ORACLE_CONNECTION",
+    "settings": {
+      "id": "orConexao",
+      "alias": "orConexao",
+      "version": "v1_0_0",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "user": {
+        "type": "text",
+        "value": "roberty_test"
+      },
+      "password": {
+        "type": "password",
+        "value": "Roberty_Test_123"
+      },
+      "connectString": {
+        "type": "text",
+        "value": "localhost:11521/FREEPDB1"
+      },
+      "connectTimeout": 10,
+      "queryTimeout": 3,
+      "varsToGenerate": []
+    },
+    "parent": "orConectarTeste",
+    "prev": "orConectarInicio",
+    "next": "orConectarOk"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "orConectarOk",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "orConectarOk",
+      "alias": "orConectarOk",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "return `✅ [Oracle] conectou (padrão das consultas: 3s) em ${((Date.now() - actions.orConectarInicio.value) / 1000).toFixed(1)}s`"
+      }
+    },
+    "parent": "orConectarTeste",
+    "prev": "orConexao"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "orConectarErro",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "orConectarErro",
+      "alias": "orConectarErro",
+      "stopRobotIfError": false,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "return `❌ [Oracle] conectou (padrão das consultas: 3s): ${actions.orConectarTeste.message}`"
+      }
+    },
+    "parent": "orConectarTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "orConectarTeste",
+    "type": "Designer:tryCatch",
+    "minimized": false,
+    "settings": {
+      "id": "orConectarTeste",
+      "alias": "orConectarTeste",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "attempts": 1
+    },
+    "tryEntrypoint": "orConectarInicio",
+    "catchEntrypoint": "orConectarErro",
+    "parent": "orSecao",
+    "next": "orRapidaTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "orRapidaInicio",
+    "type": "UTILS_CUSTOM_CODE",
+    "settings": {
+      "id": "orRapidaInicio",
+      "alias": "orRapidaInicio",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": "return Date.now()",
+      "varsToGenerate": [
+        "value"
+      ]
+    },
+    "parent": "orRapidaTeste",
+    "next": "orRapidaQuery"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "orRapidaQuery",
+    "type": "DATABASE_ORACLE_QUERY",
+    "settings": {
+      "id": "orRapidaQuery",
+      "alias": "orRapidaQuery",
+      "version": "v1_0_0",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "connection": "orConexao",
+      "query": {
+        "type": "longText",
+        "value": "SELECT 1 AS ok FROM dual"
+      }
+    },
+    "parent": "orRapidaTeste",
+    "prev": "orRapidaInicio",
+    "next": "orRapidaOk"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "orRapidaOk",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "orRapidaOk",
+      "alias": "orRapidaOk",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "return `✅ [Oracle] consulta rápida herdando o padrão da conexão em ${((Date.now() - actions.orRapidaInicio.value) / 1000).toFixed(1)}s`"
+      }
+    },
+    "parent": "orRapidaTeste",
+    "prev": "orRapidaQuery"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "orRapidaErro",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "orRapidaErro",
+      "alias": "orRapidaErro",
+      "stopRobotIfError": false,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "return `❌ [Oracle] consulta rápida herdando o padrão da conexão: ${actions.orRapidaTeste.message}`"
+      }
+    },
+    "parent": "orRapidaTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "orRapidaTeste",
+    "type": "Designer:tryCatch",
+    "minimized": false,
+    "settings": {
+      "id": "orRapidaTeste",
+      "alias": "orRapidaTeste",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "attempts": 1
+    },
+    "tryEntrypoint": "orRapidaInicio",
+    "catchEntrypoint": "orRapidaErro",
+    "parent": "orSecao",
+    "prev": "orConectarTeste",
+    "next": "orMaiorTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "orMaiorInicio",
+    "type": "UTILS_CUSTOM_CODE",
+    "settings": {
+      "id": "orMaiorInicio",
+      "alias": "orMaiorInicio",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": "return Date.now()",
+      "varsToGenerate": [
+        "value"
+      ]
+    },
+    "parent": "orMaiorTeste",
+    "next": "orMaiorQuery"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "orMaiorQuery",
+    "type": "DATABASE_ORACLE_QUERY",
+    "settings": {
+      "id": "orMaiorQuery",
+      "alias": "orMaiorQuery",
+      "version": "v1_0_0",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "connection": "orConexao",
+      "query": {
+        "type": "longText",
+        "value": "BEGIN DBMS_SESSION.SLEEP(6); END;"
+      },
+      "timeout": 15
+    },
+    "parent": "orMaiorTeste",
+    "prev": "orMaiorInicio",
+    "next": "orMaiorOk"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "orMaiorOk",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "orMaiorOk",
+      "alias": "orMaiorOk",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "return `✅ [Oracle] consulta de 6s com limite próprio de 15s (maior que o padrão) em ${((Date.now() - actions.orMaiorInicio.value) / 1000).toFixed(1)}s`"
+      }
+    },
+    "parent": "orMaiorTeste",
+    "prev": "orMaiorQuery"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "orMaiorErro",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "orMaiorErro",
+      "alias": "orMaiorErro",
+      "stopRobotIfError": false,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "return `❌ [Oracle] consulta de 6s com limite próprio de 15s (maior que o padrão): ${actions.orMaiorTeste.message}`"
+      }
+    },
+    "parent": "orMaiorTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "orMaiorTeste",
+    "type": "Designer:tryCatch",
+    "minimized": false,
+    "settings": {
+      "id": "orMaiorTeste",
+      "alias": "orMaiorTeste",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "attempts": 1
+    },
+    "tryEntrypoint": "orMaiorInicio",
+    "catchEntrypoint": "orMaiorErro",
+    "parent": "orSecao",
+    "prev": "orRapidaTeste",
+    "next": "orZeroTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "orZeroInicio",
+    "type": "UTILS_CUSTOM_CODE",
+    "settings": {
+      "id": "orZeroInicio",
+      "alias": "orZeroInicio",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": "return Date.now()",
+      "varsToGenerate": [
+        "value"
+      ]
+    },
+    "parent": "orZeroTeste",
+    "next": "orZeroQuery"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "orZeroQuery",
+    "type": "DATABASE_ORACLE_QUERY",
+    "settings": {
+      "id": "orZeroQuery",
+      "alias": "orZeroQuery",
+      "version": "v1_0_0",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "connection": "orConexao",
+      "query": {
+        "type": "longText",
+        "value": "BEGIN DBMS_SESSION.SLEEP(6); END;"
+      },
+      "timeout": 0
+    },
+    "parent": "orZeroTeste",
+    "prev": "orZeroInicio",
+    "next": "orZeroOk"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "orZeroOk",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "orZeroOk",
+      "alias": "orZeroOk",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "return `✅ [Oracle] consulta de 6s com limite 0 (sem limite) em ${((Date.now() - actions.orZeroInicio.value) / 1000).toFixed(1)}s`"
+      }
+    },
+    "parent": "orZeroTeste",
+    "prev": "orZeroQuery"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "orZeroErro",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "orZeroErro",
+      "alias": "orZeroErro",
+      "stopRobotIfError": false,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "return `❌ [Oracle] consulta de 6s com limite 0 (sem limite): ${actions.orZeroTeste.message}`"
+      }
+    },
+    "parent": "orZeroTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "orZeroTeste",
+    "type": "Designer:tryCatch",
+    "minimized": false,
+    "settings": {
+      "id": "orZeroTeste",
+      "alias": "orZeroTeste",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "attempts": 1
+    },
+    "tryEntrypoint": "orZeroInicio",
+    "catchEntrypoint": "orZeroErro",
+    "parent": "orSecao",
+    "prev": "orMaiorTeste",
+    "next": "orPadraoTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "orPadraoInicio",
+    "type": "UTILS_CUSTOM_CODE",
+    "settings": {
+      "id": "orPadraoInicio",
+      "alias": "orPadraoInicio",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": "return Date.now()",
+      "varsToGenerate": [
+        "value"
+      ]
+    },
+    "parent": "orPadraoTeste",
+    "next": "orPadraoQuery"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "orPadraoQuery",
+    "type": "DATABASE_ORACLE_QUERY",
+    "settings": {
+      "id": "orPadraoQuery",
+      "alias": "orPadraoQuery",
+      "version": "v1_0_0",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "connection": "orConexao",
+      "query": {
+        "type": "longText",
+        "value": "BEGIN DBMS_SESSION.SLEEP(6); END;"
+      }
+    },
+    "parent": "orPadraoTeste",
+    "prev": "orPadraoInicio",
+    "next": "orPadraoNaoEstourou"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "orPadraoNaoEstourou",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "orPadraoNaoEstourou",
+      "alias": "orPadraoNaoEstourou",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "return `❌ [Oracle] consulta de 6s parou no padrão da conexão (3s): não estourou (${((Date.now() - actions.orPadraoInicio.value) / 1000).toFixed(1)}s)`"
+      }
+    },
+    "parent": "orPadraoTeste",
+    "prev": "orPadraoQuery"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "orPadraoVeredito",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "orPadraoVeredito",
+      "alias": "orPadraoVeredito",
+      "stopRobotIfError": false,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "const segundos = Number(((Date.now() - actions.orPadraoInicio.value) / 1000).toFixed(1))\nconst mensagem = String(actions.orPadraoTeste.message)\nconst noTempo = segundos < 3 + 2\nconst ehTimeout = mensagem.includes(\"exceeded the time limit\")\nreturn (ehTimeout && noTempo ? `✅ [Oracle] consulta de 6s parou no padrão da conexão (3s) em ${segundos}s` : `❌ [Oracle] consulta de 6s parou no padrão da conexão (3s): ${segundos}s, \"${mensagem}\"`)"
+      }
+    },
+    "parent": "orPadraoTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "orPadraoTeste",
+    "type": "Designer:tryCatch",
+    "minimized": false,
+    "settings": {
+      "id": "orPadraoTeste",
+      "alias": "orPadraoTeste",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "attempts": 1
+    },
+    "tryEntrypoint": "orPadraoInicio",
+    "catchEntrypoint": "orPadraoVeredito",
+    "parent": "orSecao",
+    "prev": "orZeroTeste",
+    "next": "orDepoisTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "orDepoisInicio",
+    "type": "UTILS_CUSTOM_CODE",
+    "settings": {
+      "id": "orDepoisInicio",
+      "alias": "orDepoisInicio",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": "return Date.now()",
+      "varsToGenerate": [
+        "value"
+      ]
+    },
+    "parent": "orDepoisTeste",
+    "next": "orDepoisQuery"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "orDepoisQuery",
+    "type": "DATABASE_ORACLE_QUERY",
+    "settings": {
+      "id": "orDepoisQuery",
+      "alias": "orDepoisQuery",
+      "version": "v1_0_0",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "connection": "orConexao",
+      "query": {
+        "type": "longText",
+        "value": "SELECT 1 AS ok FROM dual"
+      },
+      "timeout": 10
+    },
+    "parent": "orDepoisTeste",
+    "prev": "orDepoisInicio",
+    "next": "orDepoisOk"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "orDepoisOk",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "orDepoisOk",
+      "alias": "orDepoisOk",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "return `✅ [Oracle] conexão continua utilizável depois do timeout em ${((Date.now() - actions.orDepoisInicio.value) / 1000).toFixed(1)}s`"
+      }
+    },
+    "parent": "orDepoisTeste",
+    "prev": "orDepoisQuery"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "orDepoisErro",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "orDepoisErro",
+      "alias": "orDepoisErro",
+      "stopRobotIfError": false,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "return `❌ [Oracle] conexão continua utilizável depois do timeout: ${actions.orDepoisTeste.message}`"
+      }
+    },
+    "parent": "orDepoisTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "orDepoisTeste",
+    "type": "Designer:tryCatch",
+    "minimized": false,
+    "settings": {
+      "id": "orDepoisTeste",
+      "alias": "orDepoisTeste",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "attempts": 1
+    },
+    "tryEntrypoint": "orDepoisInicio",
+    "catchEntrypoint": "orDepoisErro",
+    "parent": "orSecao",
+    "prev": "orPadraoTeste",
+    "next": "orMenorTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "orFechar2",
+    "type": "DATABASE_ORACLE_CLOSE",
+    "settings": {
+      "id": "orFechar2",
+      "alias": "orFechar2",
+      "version": "v1_0_0",
+      "stopRobotIfError": false,
+      "numberOfAttempts": 1,
+      "connection": "orConexao2"
+    },
+    "parent": "orMenorTeste",
+    "prev": "orMenorVeredito"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "orMenorInicio",
+    "type": "UTILS_CUSTOM_CODE",
+    "settings": {
+      "id": "orMenorInicio",
+      "alias": "orMenorInicio",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": "return Date.now()",
+      "varsToGenerate": [
+        "value"
+      ]
+    },
+    "parent": "orMenorTeste",
+    "next": "orConexao2"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "orConexao2",
+    "type": "DATABASE_ORACLE_CONNECTION",
+    "settings": {
+      "id": "orConexao2",
+      "alias": "orConexao2",
+      "version": "v1_0_0",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "user": {
+        "type": "text",
+        "value": "roberty_test"
+      },
+      "password": {
+        "type": "password",
+        "value": "Roberty_Test_123"
+      },
+      "connectString": {
+        "type": "text",
+        "value": "localhost:11521/FREEPDB1"
+      },
+      "connectTimeout": 10,
+      "queryTimeout": 30,
+      "varsToGenerate": []
+    },
+    "parent": "orMenorTeste",
+    "prev": "orMenorInicio",
+    "next": "orMenorQuery"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "orMenorQuery",
+    "type": "DATABASE_ORACLE_QUERY",
+    "settings": {
+      "id": "orMenorQuery",
+      "alias": "orMenorQuery",
+      "version": "v1_0_0",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "connection": "orConexao2",
+      "query": {
+        "type": "longText",
+        "value": "BEGIN DBMS_SESSION.SLEEP(6); END;"
+      },
+      "timeout": 1
+    },
+    "parent": "orMenorTeste",
+    "prev": "orConexao2",
+    "next": "orMenorNaoEstourou"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "orMenorNaoEstourou",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "orMenorNaoEstourou",
+      "alias": "orMenorNaoEstourou",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "return `❌ [Oracle] consulta parou no limite próprio de 1s (menor que o padrão de 30s): não estourou (${((Date.now() - actions.orMenorInicio.value) / 1000).toFixed(1)}s)`"
+      }
+    },
+    "parent": "orMenorTeste",
+    "prev": "orMenorQuery"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "orMenorVeredito",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "orMenorVeredito",
+      "alias": "orMenorVeredito",
+      "stopRobotIfError": false,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "const segundos = Number(((Date.now() - actions.orMenorInicio.value) / 1000).toFixed(1))\nconst mensagem = String(actions.orMenorTeste.message)\nconst noTempo = segundos < 1 + 2\nconst ehTimeout = mensagem.includes(\"exceeded the time limit\")\nreturn (ehTimeout && noTempo ? `✅ [Oracle] consulta parou no limite próprio de 1s (menor que o padrão de 30s) em ${segundos}s` : `❌ [Oracle] consulta parou no limite próprio de 1s (menor que o padrão de 30s): ${segundos}s, \"${mensagem}\"`)"
+      }
+    },
+    "parent": "orMenorTeste",
+    "next": "orFechar2"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "orMenorTeste",
+    "type": "Designer:tryCatch",
+    "minimized": false,
+    "settings": {
+      "id": "orMenorTeste",
+      "alias": "orMenorTeste",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "attempts": 1
+    },
+    "tryEntrypoint": "orMenorInicio",
+    "catchEntrypoint": "orMenorVeredito",
+    "parent": "orSecao",
+    "prev": "orDepoisTeste",
+    "next": "orInalcancavelTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "orInalcancavelInicio",
+    "type": "UTILS_CUSTOM_CODE",
+    "settings": {
+      "id": "orInalcancavelInicio",
+      "alias": "orInalcancavelInicio",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": "return Date.now()",
+      "varsToGenerate": [
+        "value"
+      ]
+    },
+    "parent": "orInalcancavelTeste",
+    "next": "orConexaoInalcancavel"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "orConexaoInalcancavel",
+    "type": "DATABASE_ORACLE_CONNECTION",
+    "settings": {
+      "id": "orConexaoInalcancavel",
+      "alias": "orConexaoInalcancavel",
+      "version": "v1_0_0",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "user": {
+        "type": "text",
+        "value": "roberty_test"
+      },
+      "password": {
+        "type": "password",
+        "value": "Roberty_Test_123"
+      },
+      "connectString": {
+        "type": "text",
+        "value": "10.255.255.1:1521/FREEPDB1"
+      },
+      "connectTimeout": 3,
+      "varsToGenerate": []
+    },
+    "parent": "orInalcancavelTeste",
+    "prev": "orInalcancavelInicio",
+    "next": "orInalcancavelErro"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "orInalcancavelErro",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "orInalcancavelErro",
+      "alias": "orInalcancavelErro",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "return `❌ [Oracle] conectou em 10.255.255.1?!`"
+      }
+    },
+    "parent": "orInalcancavelTeste",
+    "prev": "orConexaoInalcancavel"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "orInalcancavelVeredito",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "orInalcancavelVeredito",
+      "alias": "orInalcancavelVeredito",
+      "stopRobotIfError": false,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "const segundos = Number(((Date.now() - actions.orInalcancavelInicio.value) / 1000).toFixed(1))\nreturn (segundos < 5 ? `✅ [Oracle] desistiu de conectar em 10.255.255.1 (limite de 3s) em ${segundos}s` : `❌ [Oracle] desistiu de conectar em 10.255.255.1 (limite de 3s): levou ${segundos}s, \"${actions.orInalcancavelTeste.message}\"`)"
+      }
+    },
+    "parent": "orInalcancavelTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "orInalcancavelTeste",
+    "type": "Designer:tryCatch",
+    "minimized": false,
+    "settings": {
+      "id": "orInalcancavelTeste",
+      "alias": "orInalcancavelTeste",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "attempts": 1
+    },
+    "tryEntrypoint": "orInalcancavelInicio",
+    "catchEntrypoint": "orInalcancavelVeredito",
+    "parent": "orSecao",
+    "prev": "orMenorTeste",
+    "next": "orFecharTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "orFecharInicio",
+    "type": "UTILS_CUSTOM_CODE",
+    "settings": {
+      "id": "orFecharInicio",
+      "alias": "orFecharInicio",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": "return Date.now()",
+      "varsToGenerate": [
+        "value"
+      ]
+    },
+    "parent": "orFecharTeste",
+    "next": "orFecharConexao"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "orFecharConexao",
+    "type": "DATABASE_ORACLE_CLOSE",
+    "settings": {
+      "id": "orFecharConexao",
+      "alias": "orFecharConexao",
+      "version": "v1_0_0",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "connection": "orConexao"
+    },
+    "parent": "orFecharTeste",
+    "prev": "orFecharInicio",
+    "next": "orFecharOk"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "orFecharOk",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "orFecharOk",
+      "alias": "orFecharOk",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "return `✅ [Oracle] conexão fechada em ${((Date.now() - actions.orFecharInicio.value) / 1000).toFixed(1)}s`"
+      }
+    },
+    "parent": "orFecharTeste",
+    "prev": "orFecharConexao"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "orFecharErro",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "orFecharErro",
+      "alias": "orFecharErro",
+      "stopRobotIfError": false,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "return `❌ [Oracle] conexão fechada: ${actions.orFecharTeste.message}`"
+      }
+    },
+    "parent": "orFecharTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "orFecharTeste",
+    "type": "Designer:tryCatch",
+    "minimized": false,
+    "settings": {
+      "id": "orFecharTeste",
+      "alias": "orFecharTeste",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "attempts": 1
+    },
+    "tryEntrypoint": "orFecharInicio",
+    "catchEntrypoint": "orFecharErro",
+    "parent": "orSecao",
+    "prev": "orInalcancavelTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "orSecao",
+    "type": "Designer:section",
+    "minimized": false,
+    "settings": {
+      "id": "orSecao",
+      "alias": "orSecao",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "name": "Oracle - teste de tempo limite"
+    },
+    "entrypoint": "orConectarTeste",
+    "prev": "msSecao",
+    "next": "fbSecao"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "fbConectarInicio",
+    "type": "UTILS_CUSTOM_CODE",
+    "settings": {
+      "id": "fbConectarInicio",
+      "alias": "fbConectarInicio",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": "return Date.now()",
+      "varsToGenerate": [
+        "value"
+      ]
+    },
+    "parent": "fbConectarTeste",
+    "next": "fbConexao"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "fbConexao",
+    "type": "DATABASE_FIREBIRD_CONNECTION",
+    "settings": {
+      "id": "fbConexao",
+      "alias": "fbConexao",
+      "version": "v1_0_0",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "connectionType": "remoteHost",
+      "host": {
+        "type": "text",
+        "value": "localhost"
+      },
+      "port": {
+        "type": "number",
+        "value": "13050"
+      },
+      "database": {
+        "type": "text",
+        "value": "/var/lib/firebird/data/roberty_test.fdb"
+      },
+      "user": {
+        "type": "text",
+        "value": "roberty_test"
+      },
+      "password": {
+        "type": "password",
+        "value": "Roberty_Test_123"
+      },
+      "connectTimeout": 10,
+      "queryTimeout": 3,
+      "varsToGenerate": []
+    },
+    "parent": "fbConectarTeste",
+    "prev": "fbConectarInicio",
+    "next": "fbConectarOk"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "fbConectarOk",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "fbConectarOk",
+      "alias": "fbConectarOk",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "return `✅ [Firebird] conectou (padrão das consultas: 3s) em ${((Date.now() - actions.fbConectarInicio.value) / 1000).toFixed(1)}s`"
+      }
+    },
+    "parent": "fbConectarTeste",
+    "prev": "fbConexao"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "fbConectarErro",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "fbConectarErro",
+      "alias": "fbConectarErro",
+      "stopRobotIfError": false,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "return `❌ [Firebird] conectou (padrão das consultas: 3s): ${actions.fbConectarTeste.message}`"
+      }
+    },
+    "parent": "fbConectarTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "fbConectarTeste",
+    "type": "Designer:tryCatch",
+    "minimized": false,
+    "settings": {
+      "id": "fbConectarTeste",
+      "alias": "fbConectarTeste",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "attempts": 1
+    },
+    "tryEntrypoint": "fbConectarInicio",
+    "catchEntrypoint": "fbConectarErro",
+    "parent": "fbSecao",
+    "next": "fbRapidaTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "fbRapidaInicio",
+    "type": "UTILS_CUSTOM_CODE",
+    "settings": {
+      "id": "fbRapidaInicio",
+      "alias": "fbRapidaInicio",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": "return Date.now()",
+      "varsToGenerate": [
+        "value"
+      ]
+    },
+    "parent": "fbRapidaTeste",
+    "next": "fbRapidaQuery"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "fbRapidaQuery",
+    "type": "DATABASE_FIREBIRD_QUERY",
+    "settings": {
+      "id": "fbRapidaQuery",
+      "alias": "fbRapidaQuery",
+      "version": "v1_0_0",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "connection": "fbConexao",
+      "query": {
+        "type": "longText",
+        "value": "SELECT 1 AS ok FROM rdb$database"
+      }
+    },
+    "parent": "fbRapidaTeste",
+    "prev": "fbRapidaInicio",
+    "next": "fbRapidaOk"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "fbRapidaOk",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "fbRapidaOk",
+      "alias": "fbRapidaOk",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "return `✅ [Firebird] consulta rápida herdando o padrão da conexão em ${((Date.now() - actions.fbRapidaInicio.value) / 1000).toFixed(1)}s`"
+      }
+    },
+    "parent": "fbRapidaTeste",
+    "prev": "fbRapidaQuery"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "fbRapidaErro",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "fbRapidaErro",
+      "alias": "fbRapidaErro",
+      "stopRobotIfError": false,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "return `❌ [Firebird] consulta rápida herdando o padrão da conexão: ${actions.fbRapidaTeste.message}`"
+      }
+    },
+    "parent": "fbRapidaTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "fbRapidaTeste",
+    "type": "Designer:tryCatch",
+    "minimized": false,
+    "settings": {
+      "id": "fbRapidaTeste",
+      "alias": "fbRapidaTeste",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "attempts": 1
+    },
+    "tryEntrypoint": "fbRapidaInicio",
+    "catchEntrypoint": "fbRapidaErro",
+    "parent": "fbSecao",
+    "prev": "fbConectarTeste",
+    "next": "fbMaiorTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "fbMaiorInicio",
+    "type": "UTILS_CUSTOM_CODE",
+    "settings": {
+      "id": "fbMaiorInicio",
+      "alias": "fbMaiorInicio",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": "return Date.now()",
+      "varsToGenerate": [
+        "value"
+      ]
+    },
+    "parent": "fbMaiorTeste",
+    "next": "fbMaiorQuery"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "fbMaiorQuery",
+    "type": "DATABASE_FIREBIRD_QUERY",
+    "settings": {
+      "id": "fbMaiorQuery",
+      "alias": "fbMaiorQuery",
+      "version": "v1_0_0",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "connection": "fbConexao",
+      "query": {
+        "type": "longText",
+        "value": "EXECUTE BLOCK RETURNS (ok INTEGER) AS DECLARE fim TIMESTAMP; BEGIN fim = DATEADD(6 SECOND TO CAST('NOW' AS TIMESTAMP)); WHILE (CAST('NOW' AS TIMESTAMP) < fim) DO ok = 0; ok = 1; SUSPEND; END"
+      },
+      "timeout": 15
+    },
+    "parent": "fbMaiorTeste",
+    "prev": "fbMaiorInicio",
+    "next": "fbMaiorOk"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "fbMaiorOk",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "fbMaiorOk",
+      "alias": "fbMaiorOk",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "return `✅ [Firebird] consulta de 6s com limite próprio de 15s (maior que o padrão) em ${((Date.now() - actions.fbMaiorInicio.value) / 1000).toFixed(1)}s`"
+      }
+    },
+    "parent": "fbMaiorTeste",
+    "prev": "fbMaiorQuery"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "fbMaiorErro",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "fbMaiorErro",
+      "alias": "fbMaiorErro",
+      "stopRobotIfError": false,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "return `❌ [Firebird] consulta de 6s com limite próprio de 15s (maior que o padrão): ${actions.fbMaiorTeste.message}`"
+      }
+    },
+    "parent": "fbMaiorTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "fbMaiorTeste",
+    "type": "Designer:tryCatch",
+    "minimized": false,
+    "settings": {
+      "id": "fbMaiorTeste",
+      "alias": "fbMaiorTeste",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "attempts": 1
+    },
+    "tryEntrypoint": "fbMaiorInicio",
+    "catchEntrypoint": "fbMaiorErro",
+    "parent": "fbSecao",
+    "prev": "fbRapidaTeste",
+    "next": "fbZeroTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "fbZeroInicio",
+    "type": "UTILS_CUSTOM_CODE",
+    "settings": {
+      "id": "fbZeroInicio",
+      "alias": "fbZeroInicio",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": "return Date.now()",
+      "varsToGenerate": [
+        "value"
+      ]
+    },
+    "parent": "fbZeroTeste",
+    "next": "fbZeroQuery"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "fbZeroQuery",
+    "type": "DATABASE_FIREBIRD_QUERY",
+    "settings": {
+      "id": "fbZeroQuery",
+      "alias": "fbZeroQuery",
+      "version": "v1_0_0",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "connection": "fbConexao",
+      "query": {
+        "type": "longText",
+        "value": "EXECUTE BLOCK RETURNS (ok INTEGER) AS DECLARE fim TIMESTAMP; BEGIN fim = DATEADD(6 SECOND TO CAST('NOW' AS TIMESTAMP)); WHILE (CAST('NOW' AS TIMESTAMP) < fim) DO ok = 0; ok = 1; SUSPEND; END"
+      },
+      "timeout": 0
+    },
+    "parent": "fbZeroTeste",
+    "prev": "fbZeroInicio",
+    "next": "fbZeroOk"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "fbZeroOk",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "fbZeroOk",
+      "alias": "fbZeroOk",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "return `✅ [Firebird] consulta de 6s com limite 0 (sem limite) em ${((Date.now() - actions.fbZeroInicio.value) / 1000).toFixed(1)}s`"
+      }
+    },
+    "parent": "fbZeroTeste",
+    "prev": "fbZeroQuery"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "fbZeroErro",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "fbZeroErro",
+      "alias": "fbZeroErro",
+      "stopRobotIfError": false,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "return `❌ [Firebird] consulta de 6s com limite 0 (sem limite): ${actions.fbZeroTeste.message}`"
+      }
+    },
+    "parent": "fbZeroTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "fbZeroTeste",
+    "type": "Designer:tryCatch",
+    "minimized": false,
+    "settings": {
+      "id": "fbZeroTeste",
+      "alias": "fbZeroTeste",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "attempts": 1
+    },
+    "tryEntrypoint": "fbZeroInicio",
+    "catchEntrypoint": "fbZeroErro",
+    "parent": "fbSecao",
+    "prev": "fbMaiorTeste",
+    "next": "fbPadraoTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "fbPadraoInicio",
+    "type": "UTILS_CUSTOM_CODE",
+    "settings": {
+      "id": "fbPadraoInicio",
+      "alias": "fbPadraoInicio",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": "return Date.now()",
+      "varsToGenerate": [
+        "value"
+      ]
+    },
+    "parent": "fbPadraoTeste",
+    "next": "fbPadraoQuery"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "fbPadraoQuery",
+    "type": "DATABASE_FIREBIRD_QUERY",
+    "settings": {
+      "id": "fbPadraoQuery",
+      "alias": "fbPadraoQuery",
+      "version": "v1_0_0",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "connection": "fbConexao",
+      "query": {
+        "type": "longText",
+        "value": "EXECUTE BLOCK RETURNS (ok INTEGER) AS DECLARE fim TIMESTAMP; BEGIN fim = DATEADD(6 SECOND TO CAST('NOW' AS TIMESTAMP)); WHILE (CAST('NOW' AS TIMESTAMP) < fim) DO ok = 0; ok = 1; SUSPEND; END"
+      }
+    },
+    "parent": "fbPadraoTeste",
+    "prev": "fbPadraoInicio",
+    "next": "fbPadraoNaoEstourou"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "fbPadraoNaoEstourou",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "fbPadraoNaoEstourou",
+      "alias": "fbPadraoNaoEstourou",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "return `❌ [Firebird] consulta de 6s parou no padrão da conexão (3s): não estourou (${((Date.now() - actions.fbPadraoInicio.value) / 1000).toFixed(1)}s)`"
+      }
+    },
+    "parent": "fbPadraoTeste",
+    "prev": "fbPadraoQuery"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "fbPadraoVeredito",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "fbPadraoVeredito",
+      "alias": "fbPadraoVeredito",
+      "stopRobotIfError": false,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "const segundos = Number(((Date.now() - actions.fbPadraoInicio.value) / 1000).toFixed(1))\nconst mensagem = String(actions.fbPadraoTeste.message)\nconst noTempo = segundos < 3 + 2\nconst ehTimeout = mensagem.includes(\"exceeded the time limit\")\nreturn (ehTimeout && noTempo ? `✅ [Firebird] consulta de 6s parou no padrão da conexão (3s) em ${segundos}s` : `❌ [Firebird] consulta de 6s parou no padrão da conexão (3s): ${segundos}s, \"${mensagem}\"`)"
+      }
+    },
+    "parent": "fbPadraoTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "fbPadraoTeste",
+    "type": "Designer:tryCatch",
+    "minimized": false,
+    "settings": {
+      "id": "fbPadraoTeste",
+      "alias": "fbPadraoTeste",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "attempts": 1
+    },
+    "tryEntrypoint": "fbPadraoInicio",
+    "catchEntrypoint": "fbPadraoVeredito",
+    "parent": "fbSecao",
+    "prev": "fbZeroTeste",
+    "next": "fbDepoisTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "fbDepoisQuery",
+    "type": "DATABASE_FIREBIRD_QUERY",
+    "settings": {
+      "id": "fbDepoisQuery",
+      "alias": "fbDepoisQuery",
+      "version": "v1_0_0",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "connection": "fbConexao",
+      "query": {
+        "type": "longText",
+        "value": "SELECT 1 AS ok FROM rdb$database"
+      },
+      "timeout": 10
+    },
+    "parent": "fbDepoisTeste",
+    "next": "fbDepoisErro"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "fbDepoisErro",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "fbDepoisErro",
+      "alias": "fbDepoisErro",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "return `❌ [Firebird] a conexão deveria ter sido encerrada após o timeout`"
+      }
+    },
+    "parent": "fbDepoisTeste",
+    "prev": "fbDepoisQuery"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "fbDepoisOk",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "fbDepoisOk",
+      "alias": "fbDepoisOk",
+      "stopRobotIfError": false,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "return `✅ [Firebird] conexão encerrada após o timeout, como esperado (Firebird não cancela consulta)`"
+      }
+    },
+    "parent": "fbDepoisTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "fbDepoisTeste",
+    "type": "Designer:tryCatch",
+    "minimized": false,
+    "settings": {
+      "id": "fbDepoisTeste",
+      "alias": "fbDepoisTeste",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "attempts": 1
+    },
+    "tryEntrypoint": "fbDepoisQuery",
+    "catchEntrypoint": "fbDepoisOk",
+    "parent": "fbSecao",
+    "prev": "fbPadraoTeste",
+    "next": "fbMenorTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "fbFechar2",
+    "type": "DATABASE_FIREBIRD_CLOSE",
+    "settings": {
+      "id": "fbFechar2",
+      "alias": "fbFechar2",
+      "version": "v1_0_0",
+      "stopRobotIfError": false,
+      "numberOfAttempts": 1,
+      "connection": "fbConexao2"
+    },
+    "parent": "fbMenorTeste",
+    "prev": "fbMenorVeredito"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "fbMenorInicio",
+    "type": "UTILS_CUSTOM_CODE",
+    "settings": {
+      "id": "fbMenorInicio",
+      "alias": "fbMenorInicio",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": "return Date.now()",
+      "varsToGenerate": [
+        "value"
+      ]
+    },
+    "parent": "fbMenorTeste",
+    "next": "fbConexao2"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "fbConexao2",
+    "type": "DATABASE_FIREBIRD_CONNECTION",
+    "settings": {
+      "id": "fbConexao2",
+      "alias": "fbConexao2",
+      "version": "v1_0_0",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "connectionType": "remoteHost",
+      "host": {
+        "type": "text",
+        "value": "localhost"
+      },
+      "port": {
+        "type": "number",
+        "value": "13050"
+      },
+      "database": {
+        "type": "text",
+        "value": "/var/lib/firebird/data/roberty_test.fdb"
+      },
+      "user": {
+        "type": "text",
+        "value": "roberty_test"
+      },
+      "password": {
+        "type": "password",
+        "value": "Roberty_Test_123"
+      },
+      "connectTimeout": 10,
+      "queryTimeout": 30,
+      "varsToGenerate": []
+    },
+    "parent": "fbMenorTeste",
+    "prev": "fbMenorInicio",
+    "next": "fbMenorQuery"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "fbMenorQuery",
+    "type": "DATABASE_FIREBIRD_QUERY",
+    "settings": {
+      "id": "fbMenorQuery",
+      "alias": "fbMenorQuery",
+      "version": "v1_0_0",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "connection": "fbConexao2",
+      "query": {
+        "type": "longText",
+        "value": "EXECUTE BLOCK RETURNS (ok INTEGER) AS DECLARE fim TIMESTAMP; BEGIN fim = DATEADD(6 SECOND TO CAST('NOW' AS TIMESTAMP)); WHILE (CAST('NOW' AS TIMESTAMP) < fim) DO ok = 0; ok = 1; SUSPEND; END"
+      },
+      "timeout": 1
+    },
+    "parent": "fbMenorTeste",
+    "prev": "fbConexao2",
+    "next": "fbMenorNaoEstourou"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "fbMenorNaoEstourou",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "fbMenorNaoEstourou",
+      "alias": "fbMenorNaoEstourou",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "return `❌ [Firebird] consulta parou no limite próprio de 1s (menor que o padrão de 30s): não estourou (${((Date.now() - actions.fbMenorInicio.value) / 1000).toFixed(1)}s)`"
+      }
+    },
+    "parent": "fbMenorTeste",
+    "prev": "fbMenorQuery"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "fbMenorVeredito",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "fbMenorVeredito",
+      "alias": "fbMenorVeredito",
+      "stopRobotIfError": false,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "const segundos = Number(((Date.now() - actions.fbMenorInicio.value) / 1000).toFixed(1))\nconst mensagem = String(actions.fbMenorTeste.message)\nconst noTempo = segundos < 1 + 2\nconst ehTimeout = mensagem.includes(\"exceeded the time limit\")\nreturn (ehTimeout && noTempo ? `✅ [Firebird] consulta parou no limite próprio de 1s (menor que o padrão de 30s) em ${segundos}s` : `❌ [Firebird] consulta parou no limite próprio de 1s (menor que o padrão de 30s): ${segundos}s, \"${mensagem}\"`)"
+      }
+    },
+    "parent": "fbMenorTeste",
+    "next": "fbFechar2"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "fbMenorTeste",
+    "type": "Designer:tryCatch",
+    "minimized": false,
+    "settings": {
+      "id": "fbMenorTeste",
+      "alias": "fbMenorTeste",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "attempts": 1
+    },
+    "tryEntrypoint": "fbMenorInicio",
+    "catchEntrypoint": "fbMenorVeredito",
+    "parent": "fbSecao",
+    "prev": "fbDepoisTeste",
+    "next": "fbInalcancavelTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "fbInalcancavelInicio",
+    "type": "UTILS_CUSTOM_CODE",
+    "settings": {
+      "id": "fbInalcancavelInicio",
+      "alias": "fbInalcancavelInicio",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": "return Date.now()",
+      "varsToGenerate": [
+        "value"
+      ]
+    },
+    "parent": "fbInalcancavelTeste",
+    "next": "fbConexaoInalcancavel"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "fbConexaoInalcancavel",
+    "type": "DATABASE_FIREBIRD_CONNECTION",
+    "settings": {
+      "id": "fbConexaoInalcancavel",
+      "alias": "fbConexaoInalcancavel",
+      "version": "v1_0_0",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "connectionType": "remoteHost",
+      "host": {
+        "type": "text",
+        "value": "10.255.255.1"
+      },
+      "port": {
+        "type": "number",
+        "value": "3050"
+      },
+      "database": {
+        "type": "text",
+        "value": "/var/lib/firebird/data/roberty_test.fdb"
+      },
+      "user": {
+        "type": "text",
+        "value": "roberty_test"
+      },
+      "password": {
+        "type": "password",
+        "value": "Roberty_Test_123"
+      },
+      "connectTimeout": 3,
+      "varsToGenerate": []
+    },
+    "parent": "fbInalcancavelTeste",
+    "prev": "fbInalcancavelInicio",
+    "next": "fbInalcancavelErro"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "fbInalcancavelErro",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "fbInalcancavelErro",
+      "alias": "fbInalcancavelErro",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "return `❌ [Firebird] conectou em 10.255.255.1?!`"
+      }
+    },
+    "parent": "fbInalcancavelTeste",
+    "prev": "fbConexaoInalcancavel"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "fbInalcancavelVeredito",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "fbInalcancavelVeredito",
+      "alias": "fbInalcancavelVeredito",
+      "stopRobotIfError": false,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "const segundos = Number(((Date.now() - actions.fbInalcancavelInicio.value) / 1000).toFixed(1))\nreturn (segundos < 5 ? `✅ [Firebird] desistiu de conectar em 10.255.255.1 (limite de 3s) em ${segundos}s` : `❌ [Firebird] desistiu de conectar em 10.255.255.1 (limite de 3s): levou ${segundos}s, \"${actions.fbInalcancavelTeste.message}\"`)"
+      }
+    },
+    "parent": "fbInalcancavelTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "fbInalcancavelTeste",
+    "type": "Designer:tryCatch",
+    "minimized": false,
+    "settings": {
+      "id": "fbInalcancavelTeste",
+      "alias": "fbInalcancavelTeste",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "attempts": 1
+    },
+    "tryEntrypoint": "fbInalcancavelInicio",
+    "catchEntrypoint": "fbInalcancavelVeredito",
+    "parent": "fbSecao",
+    "prev": "fbMenorTeste",
+    "next": "fbFecharTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "fbFecharInicio",
+    "type": "UTILS_CUSTOM_CODE",
+    "settings": {
+      "id": "fbFecharInicio",
+      "alias": "fbFecharInicio",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": "return Date.now()",
+      "varsToGenerate": [
+        "value"
+      ]
+    },
+    "parent": "fbFecharTeste",
+    "next": "fbFecharConexao"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "fbFecharConexao",
+    "type": "DATABASE_FIREBIRD_CLOSE",
+    "settings": {
+      "id": "fbFecharConexao",
+      "alias": "fbFecharConexao",
+      "version": "v1_0_0",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "connection": "fbConexao"
+    },
+    "parent": "fbFecharTeste",
+    "prev": "fbFecharInicio",
+    "next": "fbFecharOk"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "fbFecharOk",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "fbFecharOk",
+      "alias": "fbFecharOk",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "return `✅ [Firebird] fechar a conexão já encerrada não travou em ${((Date.now() - actions.fbFecharInicio.value) / 1000).toFixed(1)}s`"
+      }
+    },
+    "parent": "fbFecharTeste",
+    "prev": "fbFecharConexao"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "fbFecharErro",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "fbFecharErro",
+      "alias": "fbFecharErro",
+      "stopRobotIfError": false,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "return `❌ [Firebird] fechar a conexão já encerrada não travou: ${actions.fbFecharTeste.message}`"
+      }
+    },
+    "parent": "fbFecharTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "fbFecharTeste",
+    "type": "Designer:tryCatch",
+    "minimized": false,
+    "settings": {
+      "id": "fbFecharTeste",
+      "alias": "fbFecharTeste",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "attempts": 1
+    },
+    "tryEntrypoint": "fbFecharInicio",
+    "catchEntrypoint": "fbFecharErro",
+    "parent": "fbSecao",
+    "prev": "fbInalcancavelTeste"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "fbSecao",
+    "type": "Designer:section",
+    "minimized": false,
+    "settings": {
+      "id": "fbSecao",
+      "alias": "fbSecao",
+      "stopRobotIfError": true,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "name": "Firebird - teste de tempo limite"
+    },
+    "entrypoint": "fbConectarTeste",
+    "prev": "orSecao",
+    "next": "fim"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "fim",
+    "type": "UTILS_SHOW_IN_HISTORY",
+    "settings": {
+      "id": "fim",
+      "alias": "fim",
+      "stopRobotIfError": false,
+      "numberOfAttempts": 1,
+      "version": "v1_0_0",
+      "code": {
+        "type": "code",
+        "value": "return \"Fim dos testes de tempo limite SQL\""
+      }
+    },
+    "prev": "fbSecao",
+    "next": "endpoint"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "entrypoint",
+    "type": "Designer:entrypoint",
+    "next": "inicio"
+  },
+  {
+    "disabled": false,
+    "selected": false,
+    "id": "endpoint",
+    "type": "Designer:endpoint",
+    "prev": "fim"
+  }
+]
